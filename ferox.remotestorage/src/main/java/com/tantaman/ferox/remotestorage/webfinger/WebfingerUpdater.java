@@ -22,6 +22,7 @@ public class WebfingerUpdater extends RouteHandlerAdapter {
 	@Override
 	public void lastContent(IHttpContent content, IResponse response,
 			IRequestChainer next) {
+		System.out.println("Last content like wtf?");
 		IDynamicWebfingerEntry entry = response.getUserData();
 		
 		List<Map<String,Object>> links = entry.getLinks();

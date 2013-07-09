@@ -13,7 +13,7 @@ public class WebfingerMiddlewareInitializer implements IRouteInitializer {
 	
 	public void activate(Map<String, String> configuration) {
 		storageRootUri = configuration.get("storageRootUri");
-		authDialog = configuration.get("authDialog");
+		authDialog = configuration.get("authDialogUri");
 	}
 	
 	@Override
@@ -23,12 +23,11 @@ public class WebfingerMiddlewareInitializer implements IRouteInitializer {
 			public IRouteHandler create() {
 				return new WebfingerUpdater(storageRootUri, authDialog);
 			}
-		});
+		}, 20);
 	}
 
 	@Override
 	public int getPriority() {
 		return 0;
 	}
-
 }
