@@ -11,23 +11,23 @@ import com.tantaman.ferox.remotestorage.route_handlers.PublicReadRouteHandler;
 
 // TODO: make sure this component has configuration-policy="required"
 public class RouteInitializer implements IRouteInitializer {
-	private volatile String resourceRootUri;
+	private volatile String storageRootUri;
 	
 	public void activate(Map<String, String> configuration) {
 		// configuration contains information such as the root of the routes.
-		resourceRootUri = configuration.get("resourceRootUri");
+		storageRootUri = configuration.get("storageRootUri");
 	}
 	
 	@Override
 	public void addRoutes(IRouterBuilder routerBuilder) {
-		routerBuilder.get(resourceRootUri + "/:user/public/**", new IRouteHandlerFactory() {
+		routerBuilder.get(storageRootUri + "/:user/public/**", new IRouteHandlerFactory() {
 			@Override
 			public IRouteHandler create() {
 				return new PublicReadRouteHandler();
 			}
 		});
 		
-		routerBuilder.get(resourceRootUri + "/:user/**", new IRouteHandlerFactory() {
+		routerBuilder.get(storageRootUri + "/:user/**", new IRouteHandlerFactory() {
 			@Override
 			public IRouteHandler create() {
 				return new PrivateReadRouteHandler();

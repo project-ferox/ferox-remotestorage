@@ -5,4 +5,6 @@ Bundle-SymbolicName: ferox.remotestorage
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Import-Package: com.tantaman.ferox.api.request_response,
- com.tantaman.ferox.api.router
+ com.tantaman.ferox.api.router,
+ com.tantaman.ferox.webfinger.entry
+Service-Component: OSGI-INF/*
