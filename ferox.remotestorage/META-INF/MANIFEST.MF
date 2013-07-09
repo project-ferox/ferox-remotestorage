@@ -6,5 +6,8 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Import-Package: com.tantaman.ferox.api.request_response,
  com.tantaman.ferox.api.router,
- com.tantaman.ferox.webfinger.entry
+ com.tantaman.ferox.webfinger.entry,
+ com.tantaman.lo4j;version="1.0.0",
+ io.netty.handler.codec.http;version="4.0.0.CR5-SNAPSHOT"
 Service-Component: OSGI-INF/*
+Export-Package: com.tantaman.ferox.remotestorage
