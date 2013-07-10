@@ -7,11 +7,16 @@ import java.util.Hashtable;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
 
+import com.tantaman.ferox.api.server.IPluggableServer;
 import com.tantaman.ferox.remotestorage.ConfigKeys;
 
 public class Main {
-	public void setConfigAdmin(ConfigurationAdmin configAdmin) {
+	private void setConfigAdmin(ConfigurationAdmin configAdmin) {
 		createConfig("ferox.remotestorage.RouteInitializer", configAdmin);
+	}
+	
+	private void setPluggableServer(IPluggableServer server) {
+		server.listen(8080, false);
 	}
 	
 	private void createConfig(String id, ConfigurationAdmin configAdmin) {
