@@ -4,8 +4,11 @@ Bundle-Name: RemoteStorage-Standalone
 Bundle-SymbolicName: ferox.remotestorage.server.standalone
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Import-Package: com.tantaman.ferox.api.server,
+Import-Package: com.tantaman.ferox.api;version="1.0.0",
+ com.tantaman.ferox.api.server,
+ com.tantaman.ferox.middleware,
  com.tantaman.ferox.remotestorage,
+ io.netty.channel;version="4.0.0.CR5-SNAPSHOT",
  org.osgi.framework;version="1.7.0",
  org.osgi.service.cm;version="1.4.0"
 Service-Component: OSGI-INF/*

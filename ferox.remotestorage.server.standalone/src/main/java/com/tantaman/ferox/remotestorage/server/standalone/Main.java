@@ -8,6 +8,7 @@ import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
 
 import com.tantaman.ferox.api.server.IPluggableServer;
+import com.tantaman.ferox.middleware.Middleware;
 import com.tantaman.ferox.remotestorage.ConfigKeys;
 
 public class Main {
@@ -16,6 +17,7 @@ public class Main {
 	}
 	
 	private void setPluggableServer(IPluggableServer server) {
+		server.use(Middleware.BODY_PARSER);
 		server.listen(8080, false);
 	}
 	
