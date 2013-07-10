@@ -1,47 +1,60 @@
 package com.tantaman.ferox.remotestorage.resource;
 
 public class DefaultResourceIdentifier implements IResourceIdentifier {
-
+	private final String uriRoot;
+	private final String relativeUri;
+	private final String user;
+	private final boolean isPublic;
+	private final String module;
+	private final boolean isDir;
+	
+	public DefaultResourceIdentifier(String uriRoot, String user, String relativeUri) {
+		if (relativeUri.startsWith("/")) {
+			relativeUri = relativeUri.substring(1);
+		}
+		
+		this.uriRoot = uriRoot;
+		this.user = user;
+		this.relativeUri = relativeUri;
+		isPublic = relativeUri.startsWith("public");
+		
+		if (isPublic) {
+			int len = "public".length();
+			module = relativeUri.substring(len + 1, relativeUri.indexOf("/", len+1));
+		} else {
+			module = relativeUri.substring(0, relativeUri.indexOf("/"));
+		}
+		
+		isDir = relativeUri.endsWith("/") ? true : false;
+	}
+	
 	@Override
 	public String getUriRoot() {
-		// TODO Auto-generated method stub
-		return null;
+		return uriRoot;
 	}
 
 	@Override
 	public String getUser() {
-		// TODO Auto-generated method stub
-		return null;
+		return user;
 	}
 
 	@Override
 	public boolean isPublic() {
-		// TODO Auto-generated method stub
-		return false;
+		return isPublic;
 	}
 
 	@Override
 	public String getModule() {
-		// TODO Auto-generated method stub
-		return null;
+		return module;
 	}
 
 	@Override
-	public String getPath() {
-		// TODO Auto-generated method stub
-		return null;
+	public String getUserRelativerUri() {
+		return relativeUri;
 	}
-
+	
 	@Override
-	public String getFullRelativePath() {
-		// TODO Auto-generated method stub
-		return null;
+	public boolean isDir() {
+		return isDir;
 	}
-
-	@Override
-	public String getAbsolutePath() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

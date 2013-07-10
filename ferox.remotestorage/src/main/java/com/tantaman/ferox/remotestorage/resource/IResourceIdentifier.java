@@ -5,7 +5,6 @@ public interface IResourceIdentifier {
 	public String getUser();
 	public boolean isPublic();
 	public String getModule();
-	public String getPath();
-	public String getFullRelativePath();
-	public String getAbsolutePath();
+	public String getUserRelativerUri();
+	public boolean isDir();
 }

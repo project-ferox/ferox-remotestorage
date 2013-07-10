@@ -9,6 +9,6 @@ public class ResourceProviderFactory implements IResourceProviderFactory {
 	@Override
 	public IResourceProvider createResourceProvider(
 			Map<String, String> configuration) {
-		return null;
+		return new FsResourceProvider(configuration);
 	}
 }
