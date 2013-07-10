@@ -2,14 +2,12 @@ package com.tantaman.ferox.remotestorage;
 
 import java.util.Map;
 
-import com.tantaman.ferox.api.router.IRouteHandler;
 import com.tantaman.ferox.api.router.IRouteHandlerFactory;
 import com.tantaman.ferox.api.router.IRouteInitializer;
 import com.tantaman.ferox.api.router.IRouterBuilder;
 import com.tantaman.ferox.remotestorage.auth_management.AuthManagerRouteInitializer;
 import com.tantaman.ferox.remotestorage.auth_management.AuthenticationRepository;
-import com.tantaman.ferox.remotestorage.route_handlers.PrivateReadRouteHandler;
-import com.tantaman.ferox.remotestorage.route_handlers.PublicReadRouteHandler;
+import com.tantaman.ferox.remotestorage.route_handlers.HandlerFactories;
 import com.tantaman.ferox.remotestorage.webfinger.WebfingerMiddlewareInitializer;
 
 // TODO: make sure this component has configuration-policy="required"
@@ -34,19 +32,20 @@ public class RouteInitializer implements IRouteInitializer {
 	
 	@Override
 	public void addRoutes(IRouterBuilder routerBuilder) {
-		routerBuilder.get(storageRootUri + "/:user/public/**", new IRouteHandlerFactory() {
-			@Override
-			public IRouteHandler create() {
-				return new PublicReadRouteHandler();
-			}
-		});
+		String route = storageRootUri + "/:user/**";
+		IRouteHandlerFactory identifierBuilderFactory = HandlerFactories.identifierBuilder(storageRootUri);
+		IRouteHandlerFactory accessControl = HandlerFactories.accessControl(authRepository);
+		routerBuilder.get(route, identifierBuilderFactory);		
+		routerBuilder.get(route, accessControl);
+		routerBuilder.get(route, HandlerFactories.READ);
 		
-		routerBuilder.get(storageRootUri + "/:user/**", new IRouteHandlerFactory() {
-			@Override
-			public IRouteHandler create() {
-				return new PrivateReadRouteHandler();
-			}
-		});
+		routerBuilder.put(route, identifierBuilderFactory);		
+		routerBuilder.put(route, accessControl);
+		routerBuilder.put(route, HandlerFactories.UPSERT);
+		
+		routerBuilder.delete(route, identifierBuilderFactory);		
+		routerBuilder.delete(route, accessControl);
+		routerBuilder.delete(route, HandlerFactories.DELETE);
 		
 		authManagerInit.addRoutes(routerBuilder);
 		webfingerMiddlewareInit.addRoutes(routerBuilder);

@@ -1,19 +1,17 @@
 package com.tantaman.ferox.remotestorage.resource;
 
 public class DefaultResourceIdentifier implements IResourceIdentifier {
-	private final String uriRoot;
 	private final String relativeUri;
 	private final String user;
 	private final boolean isPublic;
 	private final String module;
 	private final boolean isDir;
 	
-	public DefaultResourceIdentifier(String uriRoot, String user, String relativeUri) {
+	public DefaultResourceIdentifier(String user, String relativeUri) {
 		if (relativeUri.startsWith("/")) {
 			relativeUri = relativeUri.substring(1);
 		}
 		
-		this.uriRoot = uriRoot;
 		this.user = user;
 		this.relativeUri = relativeUri;
 		isPublic = relativeUri.startsWith("public");
@@ -28,11 +26,6 @@ public class DefaultResourceIdentifier implements IResourceIdentifier {
 		isDir = relativeUri.endsWith("/") ? true : false;
 	}
 	
-	@Override
-	public String getUriRoot() {
-		return uriRoot;
-	}
-
 	@Override
 	public String getUser() {
 		return user;

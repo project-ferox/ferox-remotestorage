@@ -12,11 +12,11 @@ import com.tantaman.ferox.middleware.Middleware;
 import com.tantaman.ferox.remotestorage.ConfigKeys;
 
 public class Main {
-	private void setConfigAdmin(ConfigurationAdmin configAdmin) {
+	void setConfigAdmin(ConfigurationAdmin configAdmin) {
 		createConfig("ferox.remotestorage.RouteInitializer", configAdmin);
 	}
 	
-	private void setPluggableServer(IPluggableServer server) {
+	void setPluggableServer(IPluggableServer server) {
 		server.use(Middleware.BODY_PARSER);
 		server.listen(8080, false);
 	}
