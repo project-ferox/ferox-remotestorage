@@ -6,6 +6,7 @@ public class DefaultResourceIdentifier implements IResourceIdentifier {
 	private final boolean isPublic;
 	private final String module;
 	private final boolean isDir;
+	private final String moduleRelativeUri;
 	
 	public DefaultResourceIdentifier(String user, String relativeUri) {
 		if (relativeUri.startsWith("/")) {
@@ -18,9 +19,14 @@ public class DefaultResourceIdentifier implements IResourceIdentifier {
 		
 		if (isPublic) {
 			int len = "public".length();
-			module = relativeUri.substring(len + 1, relativeUri.indexOf("/", len+1));
+			int endIndex = relativeUri.indexOf("/", len+1);
+			module = relativeUri.substring(len + 1, endIndex);
+			
+			moduleRelativeUri = relativeUri.substring(endIndex);
 		} else {
-			module = relativeUri.substring(0, relativeUri.indexOf("/"));
+			int endIndex = relativeUri.indexOf("/");
+			module = relativeUri.substring(0, endIndex);
+			moduleRelativeUri = relativeUri.substring(endIndex);
 		}
 		
 		isDir = relativeUri.endsWith("/") ? true : false;
@@ -44,6 +50,11 @@ public class DefaultResourceIdentifier implements IResourceIdentifier {
 	@Override
 	public String getUserRelativerUri() {
 		return relativeUri;
+	}
+	
+	@Override
+	public String getModuleRelativeUri() {
+		return moduleRelativeUri;
 	}
 	
 	@Override

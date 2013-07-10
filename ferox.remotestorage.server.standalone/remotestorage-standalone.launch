@@ -23,5 +23,5 @@
 <booleanAttribute key="tracing" value="false"/>
 <booleanAttribute key="useCustomFeatures" value="false"/>
 <booleanAttribute key="useDefaultConfigArea" value="true"/>
-<stringAttribute key="workspace_bundles" value="com.tantaman.ferox.api@default:default,com.tantaman.ferox.server@default:default,com.tantaman.ferox.util@default:default,com.tantaman.ferox.webfinger@default:default,com.tantaman.ferox@default:default,com.tantaman.lo4j@default:default,ferox.remotestorage.resource_provider.fs@default:default,ferox.remotestorage.server.standalone@default:default,ferox.remotestorage@default:default,ferox.webfinger.resource_provider.blank@default:default,ferox.webfinger.test@default:default"/>
+<stringAttribute key="workspace_bundles" value="com.tantaman.ferox.api@default:default,com.tantaman.ferox.server@default:default,com.tantaman.ferox.util@default:default,com.tantaman.ferox.webfinger@default:default,com.tantaman.ferox@default:default,com.tantaman.lo4j@default:default,ferox.middleware@default:default,ferox.remotestorage.resource_provider.fs@default:default,ferox.remotestorage.server.standalone@default:default,ferox.remotestorage@default:default,ferox.webfinger.resource_provider.blank@default:default,ferox.webfinger.test@default:default"/>
 </launchConfiguration>

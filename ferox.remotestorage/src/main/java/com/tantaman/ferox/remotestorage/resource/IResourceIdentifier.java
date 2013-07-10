@@ -5,5 +5,6 @@ public interface IResourceIdentifier {
 	public boolean isPublic();
 	public String getModule();
 	public String getUserRelativerUri();
+	public String getModuleRelativeUri();
 	public boolean isDir();
 }
