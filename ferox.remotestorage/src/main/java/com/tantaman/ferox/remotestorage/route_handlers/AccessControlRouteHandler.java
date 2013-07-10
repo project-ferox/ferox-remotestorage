@@ -9,15 +9,15 @@ import com.tantaman.ferox.api.request_response.IHttpRequest;
 import com.tantaman.ferox.api.request_response.IRequestChainer;
 import com.tantaman.ferox.api.request_response.IResponse;
 import com.tantaman.ferox.api.router.IRouteHandler;
-import com.tantaman.ferox.remotestorage.auth_management.AuthenticationRepository;
+import com.tantaman.ferox.remotestorage.auth_management.AuthenticationManager;
 import com.tantaman.ferox.remotestorage.resource.IResourceIdentifier;
 import com.tantaman.lo4j.Lo;
 
 public class AccessControlRouteHandler implements IRouteHandler {
-	private final AuthenticationRepository authRepo;
+	private final AuthenticationManager authRepo;
 	private boolean authorized = false;
 	
-	public AccessControlRouteHandler(AuthenticationRepository authRepo) {
+	public AccessControlRouteHandler(AuthenticationManager authRepo) {
 		this.authRepo = authRepo;
 	}
 	

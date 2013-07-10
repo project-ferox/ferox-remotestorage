@@ -14,7 +14,7 @@ import com.tantaman.lo4j.Lo;
  * @author tantaman
  *
  */
-public class AuthenticationRepository {
+public class AuthenticationManager {
 	private static final ExecutorService AUTH_LOOKUP = Executors.newFixedThreadPool(1);
 	
 	public void addAuthentication(Authentication auth, Lo.Fn<Void, Void> callback) {
@@ -25,6 +25,11 @@ public class AuthenticationRepository {
 			final String authorization, 
 			final HttpMethod method,
 			final Lo.VFn2<Boolean, Throwable> callback) {
+		// TODO: convert parameters to:
+		// 1. authorization
+		// 2. requested scope
+		// so resource identifier would have to get changed to a "scope"
+		// authorization is fine as is.
 		AUTH_LOOKUP.execute(new Runnable() {
 			@Override
 			public void run() {

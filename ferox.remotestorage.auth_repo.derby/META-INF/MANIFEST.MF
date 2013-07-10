@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: remotestorage.auth_repo.derby
+Bundle-SymbolicName: ferox.remotestorage.auth_repo.derby
+Bundle-Version: 1.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Import-Package: com.tantaman.ferox.remotestorage.auth_management
