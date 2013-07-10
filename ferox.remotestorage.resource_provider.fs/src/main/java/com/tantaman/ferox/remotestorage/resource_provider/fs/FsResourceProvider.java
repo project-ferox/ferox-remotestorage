@@ -1,6 +1,8 @@
 package com.tantaman.ferox.remotestorage.resource_provider.fs;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Arrays;
 import java.util.Map;
 
 import com.tantaman.ferox.remotestorage.ConfigKeys;
@@ -18,7 +20,7 @@ public class FsResourceProvider implements IResourceProvider {
 	
 	// TODO: do authentication in an earlier layer
 	@Override
-	public void getResource(final IResourceIdentifier identifier, final Lo.Fn<Void, IResource> callback) {
+	public void getResource(final IResourceIdentifier identifier, final Lo.VFn2<IResource, Throwable> callback) {
 		Workers.FS_EVENT_QUEUE.execute(new Runnable() {
 			@Override
 			public void run() {
@@ -27,21 +29,33 @@ public class FsResourceProvider implements IResourceProvider {
 		});
 	}
 	
-	private void retrieveResource(IResourceIdentifier identifier, Lo.Fn<Void, IResource> callback) {
+	private void retrieveResource(IResourceIdentifier identifier, Lo.VFn2<IResource, Throwable> callback) {
 		String uri = identifier.getUserRelativerUri();
 		
 		String path = fsRoot + "/" + identifier.getUser() + "/" + uri.replace("..", "");
 		
-		IResource result;
 		if (identifier.isDir()) {
 			// do the directory listing
 			// TODO: spec has some weird stuff about empty folders
 			// (e.g., saying they don't exist and not listing them)
 			File f = new File(path);
-			f.listFiles();
+			if (f.exists()) {
+				File [] listing = f.listFiles();
+				callback.f(new Directory(Arrays.asList(listing)), null);
+			} else {
+				callback.f(null, new FileNotFoundException());
+			}
 		} else {
 			File f = new File(path);
-			
+			if (f.exists()) {
+				try {
+					callback.f(new Document(f), null);
+				} catch (Exception e) {
+					callback.f(null, e);
+				}
+			} else {
+				callback.f(null, new FileNotFoundException());
+			}
 		}
 	}
 
