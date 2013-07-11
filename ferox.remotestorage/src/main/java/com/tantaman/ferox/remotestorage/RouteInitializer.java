@@ -28,7 +28,6 @@ public class RouteInitializer implements IRouteInitializer {
 	}
 	
 	void setResourceProvider(IResourceProvider resourceProvider) {
-		System.out.println("RESOURCE PROVIDER SET");
 		this.resourceProvider = resourceProvider;
 	}
 	
