@@ -3,6 +3,7 @@ package com.tantaman.ferox.remotestorage.route_handlers;
 import com.tantaman.ferox.api.router.IRouteHandler;
 import com.tantaman.ferox.api.router.IRouteHandlerFactory;
 import com.tantaman.ferox.remotestorage.auth_management.AuthenticationManager;
+import com.tantaman.ferox.remotestorage.resource.IResourceProvider;
 
 public class HandlerFactories {
 	
@@ -23,14 +24,17 @@ public class HandlerFactories {
 				return new AccessControlRouteHandler(authRepo);
 			}
 		};
-	} 
+	}
 	
-	public static final IRouteHandlerFactory READ = new IRouteHandlerFactory() {
-		@Override
-		public IRouteHandler create() {
-			return new ReadRouteHandler();
-		}
-	};
+	public static IRouteHandlerFactory read(final IResourceProvider resourceProvider) {
+		return new IRouteHandlerFactory() {
+			
+			@Override
+			public IRouteHandler create() {
+				return new ReadRouteHandler(resourceProvider);
+			}
+		};
+	}
 	
 	public static final IRouteHandlerFactory UPSERT =  new IRouteHandlerFactory() {
 		@Override

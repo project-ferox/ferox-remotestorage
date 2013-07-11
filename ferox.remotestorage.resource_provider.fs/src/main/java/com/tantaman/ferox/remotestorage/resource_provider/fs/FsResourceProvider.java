@@ -12,9 +12,9 @@ import com.tantaman.ferox.remotestorage.resource.IResourceProvider;
 import com.tantaman.lo4j.Lo;
 
 public class FsResourceProvider implements IResourceProvider {
-	private final String fsRoot;
+	private String fsRoot;
 	
-	public FsResourceProvider(Map<String, String> configuration) {
+	public void activate(Map<String, String> configuration) {
 		fsRoot = configuration.get(ConfigKeys.FS_STORAGE_ROOT);
 	}
 	

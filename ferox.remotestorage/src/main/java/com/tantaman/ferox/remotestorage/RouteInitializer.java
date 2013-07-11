@@ -7,12 +7,16 @@ import com.tantaman.ferox.api.router.IRouteInitializer;
 import com.tantaman.ferox.api.router.IRouterBuilder;
 import com.tantaman.ferox.remotestorage.auth_management.AuthManagerRouteInitializer;
 import com.tantaman.ferox.remotestorage.auth_management.AuthenticationManager;
+import com.tantaman.ferox.remotestorage.resource.IResourceProvider;
 import com.tantaman.ferox.remotestorage.route_handlers.HandlerFactories;
 import com.tantaman.ferox.remotestorage.webfinger.WebfingerMiddlewareInitializer;
 
 // TODO: make sure this component has configuration-policy="required"
 public class RouteInitializer implements IRouteInitializer {
-	private volatile String storageRootUri;
+	// TODO: look over the OSGi spec and see what kind of "happens-before" relationships 
+	// get set up for statically bound services.
+	private String storageRootUri;
+	private IResourceProvider resourceProvider;
 	private final AuthManagerRouteInitializer authManagerInit;
 	private final AuthenticationManager authRepository;
 	private final WebfingerMiddlewareInitializer webfingerMiddlewareInit;
@@ -21,6 +25,11 @@ public class RouteInitializer implements IRouteInitializer {
 		authRepository = new AuthenticationManager();
 		authManagerInit = new AuthManagerRouteInitializer();
 		webfingerMiddlewareInit = new WebfingerMiddlewareInitializer();
+	}
+	
+	void setResourceProvider(IResourceProvider resourceProvider) {
+		System.out.println("RESOURCE PROVIDER SET");
+		this.resourceProvider = resourceProvider;
 	}
 	
 	public void activate(Map<String, String> configuration) {
@@ -35,9 +44,11 @@ public class RouteInitializer implements IRouteInitializer {
 		String route = storageRootUri + "/:user/**";
 		IRouteHandlerFactory identifierBuilderFactory = HandlerFactories.identifierBuilder(storageRootUri);
 		IRouteHandlerFactory accessControl = HandlerFactories.accessControl(authRepository);
+		IRouteHandlerFactory read = HandlerFactories.read(resourceProvider);
+		
 		routerBuilder.get(route, identifierBuilderFactory);		
 		routerBuilder.get(route, accessControl);
-		routerBuilder.get(route, HandlerFactories.READ);
+		routerBuilder.get(route, read);
 		
 		routerBuilder.put(route, identifierBuilderFactory);		
 		routerBuilder.put(route, accessControl);
@@ -53,7 +64,6 @@ public class RouteInitializer implements IRouteInitializer {
 
 	@Override
 	public int getPriority() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 

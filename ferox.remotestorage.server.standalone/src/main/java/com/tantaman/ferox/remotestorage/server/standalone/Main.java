@@ -8,16 +8,20 @@ import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
 
 import com.tantaman.ferox.api.server.IPluggableServer;
-import com.tantaman.ferox.middleware.Middleware;
 import com.tantaman.ferox.remotestorage.ConfigKeys;
 
 public class Main {
 	void setConfigAdmin(ConfigurationAdmin configAdmin) {
+		createConfig("ferox.remotestorage.FsResourceProvider", configAdmin);
 		createConfig("ferox.remotestorage.RouteInitializer", configAdmin);
 	}
 	
 	void setPluggableServer(IPluggableServer server) {
-		server.use(Middleware.BODY_PARSER);
+		// the remoteStorage spec calls to just save the entire request body as the contents
+		// of the document.  This seems rather restrictive as
+		// remoteStorage will never be able to support file uploads in a sensible manner.
+//		server.use(Middleware.BODY_PARSER);
+		
 		server.listen(8080, false);
 	}
 	

@@ -38,6 +38,7 @@ public class AccessControlRouteHandler implements IRouteHandler {
 						} else {
 							response.send("{\"status\": \"unauthorized\"}", "application/json", HttpResponseStatus.UNAUTHORIZED)
 							.addListener(ChannelFutureListener.CLOSE);
+							request.dispose();
 						}
 					}
 				});
@@ -47,11 +48,13 @@ public class AccessControlRouteHandler implements IRouteHandler {
 	public void content(IHttpContent content, IResponse response,
 			IRequestChainer next) {
 		if (authorized) next.content(content);
+		else content.dispose();
 	}
 
 	@Override
 	public void lastContent(IHttpContent content, IResponse response,
 			IRequestChainer next) {
 		if (authorized) next.lastContent(content);
+		else content.dispose();
 	}
 }

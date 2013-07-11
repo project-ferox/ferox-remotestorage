@@ -29,6 +29,7 @@ public class IdentifierBuilderRouteHandler extends RouteHandlerAdapter {
 		} catch (Exception e) {
 			response.send("{\"status\": \"not_found\"}", "application/json", HttpResponseStatus.NOT_FOUND)
 				.addListener(ChannelFutureListener.CLOSE);
+			request.dispose();
 		}
 	}
 }

@@ -1,0 +1,8 @@
+<?xml version='1.1'?>
+
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" configuration-policy="require" name="ferox.remotestorage.FsResourceProvider">
+  <implementation class="com.tantaman.ferox.remotestorage.resource_provider.fs.FsResourceProvider"/>
+  <service>
+    <provide interface="com.tantaman.ferox.remotestorage.resource.IResourceProvider"/>
+  </service>
+</scr:component>
