@@ -2,10 +2,13 @@ package com.tantaman.ferox.remotestorage.resource_provider.fs;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import com.tantaman.ferox.remotestorage.ConfigKeys;
+import com.tantaman.ferox.remotestorage.resource.IDocumentResource;
 import com.tantaman.ferox.remotestorage.resource.IResource;
 import com.tantaman.ferox.remotestorage.resource.IResourceIdentifier;
 import com.tantaman.ferox.remotestorage.resource.IResourceProvider;
@@ -20,7 +23,9 @@ public class FsResourceProvider implements IResourceProvider {
 	
 	// TODO: do authentication in an earlier layer
 	@Override
-	public void getResource(final IResourceIdentifier identifier, final Lo.VFn2<IResource, Throwable> callback) {
+	public void getResource(final IResourceIdentifier identifier, final Lo.VFn2<IResource, Throwable> callback) throws IllegalStateException {
+		if (identifier.getModule().equals(".metadata")) throw new IllegalStateException("Illegal module");
+		
 		Workers.FS_EVENT_QUEUE.execute(new Runnable() {
 			@Override
 			public void run() {
@@ -41,7 +46,13 @@ public class FsResourceProvider implements IResourceProvider {
 			File f = new File(path);
 			if (f.exists()) {
 				File [] listing = f.listFiles();
-				callback.f(new Directory(Arrays.asList(listing)), null);
+				
+				List<IDocumentResource> documentListing = new ArrayList<>(listing.length);
+				for (File file : listing) {
+					documentListing.add(new Document(file));
+				}
+				
+				callback.f(new Directory(documentListing), null);
 			} else {
 				callback.f(null, new FileNotFoundException());
 			}

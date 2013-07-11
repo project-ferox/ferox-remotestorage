@@ -1,20 +1,20 @@
 package com.tantaman.ferox.remotestorage.resource_provider.fs;
 
-import java.io.File;
 import java.util.Collections;
 import java.util.List;
 
 import com.tantaman.ferox.remotestorage.resource.IDirectoryResource;
+import com.tantaman.ferox.remotestorage.resource.IDocumentResource;
 
 public class Directory implements IDirectoryResource {
-	private final List<File> listing;
+	private final List<IDocumentResource> listing;
 	
-	public Directory(List<File> files) {
+	public Directory(List<IDocumentResource> files) {
 		listing = Collections.unmodifiableList(files);
 	}
 	
 	@Override
-	public List<File> getListing() {
+	public List<IDocumentResource> getListing() {
 		return listing;
 	}
 

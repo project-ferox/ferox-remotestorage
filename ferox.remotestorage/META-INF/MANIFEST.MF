@@ -9,8 +9,9 @@ Import-Package: com.tantaman.ferox.api.request_response,
  com.tantaman.ferox.webfinger.entry,
  com.tantaman.lo4j;version="1.0.0",
  io.netty.channel;version="4.0.0.CR5-SNAPSHOT",
- io.netty.util.concurrent;version="4.0.0.CR5-SNAPSHOT",
- io.netty.handler.codec.http;version="4.0.0.CR5-SNAPSHOT"
+ io.netty.handler.codec.http;version="4.0.0.CR5-SNAPSHOT",
+ io.netty.handler.stream;version="4.0.0.CR5-SNAPSHOT",
+ io.netty.util.concurrent;version="4.0.0.CR5-SNAPSHOT"
 Service-Component: OSGI-INF/*
 Export-Package: com.tantaman.ferox.remotestorage,
  com.tantaman.ferox.remotestorage.auth_management,
