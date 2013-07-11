@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.Dictionary;
 import java.util.Hashtable;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
 
@@ -11,7 +13,11 @@ import com.tantaman.ferox.api.server.IPluggableServer;
 import com.tantaman.ferox.remotestorage.ConfigKeys;
 
 public class Main {
+	
+	private static final Logger log = LoggerFactory.getLogger(Main.class); 
+	
 	void setConfigAdmin(ConfigurationAdmin configAdmin) {
+		log.debug("Creating configuration objects");
 		createConfig("ferox.remotestorage.FsResourceProvider", configAdmin);
 		createConfig("ferox.remotestorage.RouteInitializer", configAdmin);
 	}
@@ -22,6 +28,7 @@ public class Main {
 		// remoteStorage will never be able to support file uploads in a sensible manner.
 //		server.use(Middleware.BODY_PARSER);
 		
+		log.debug("RemoteStorage listening on 8080");
 		server.listen(8080, false);
 	}
 	

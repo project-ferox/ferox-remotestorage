@@ -3,12 +3,10 @@ package com.tantaman.ferox.remotestorage.resource_provider.fs;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 import com.tantaman.ferox.remotestorage.ConfigKeys;
-import com.tantaman.ferox.remotestorage.resource.IDocumentResource;
 import com.tantaman.ferox.remotestorage.resource.IResource;
 import com.tantaman.ferox.remotestorage.resource.IResourceIdentifier;
 import com.tantaman.ferox.remotestorage.resource.IResourceProvider;
@@ -21,7 +19,6 @@ public class FsResourceProvider implements IResourceProvider {
 		fsRoot = configuration.get(ConfigKeys.FS_STORAGE_ROOT);
 	}
 	
-	// TODO: do authentication in an earlier layer
 	@Override
 	public void getResource(final IResourceIdentifier identifier, final Lo.VFn2<IResource, Throwable> callback) throws IllegalStateException {
 		if (identifier.getModule().equals(".metadata")) throw new IllegalStateException("Illegal module");
