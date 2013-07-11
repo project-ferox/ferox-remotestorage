@@ -13,7 +13,6 @@ import com.tantaman.ferox.api.server.IPluggableServer;
 import com.tantaman.ferox.remotestorage.ConfigKeys;
 
 public class Main {
-	
 	private static final Logger log = LoggerFactory.getLogger(Main.class); 
 	
 	void setConfigAdmin(ConfigurationAdmin configAdmin) {
