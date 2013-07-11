@@ -10,6 +10,4 @@ public interface IDocumentResource extends IResource {
 	public long lastModified();
 	public long length() throws FileNotFoundException;
 	public String getContentType();
-	public String getVersion();
-	public String getName();
 }

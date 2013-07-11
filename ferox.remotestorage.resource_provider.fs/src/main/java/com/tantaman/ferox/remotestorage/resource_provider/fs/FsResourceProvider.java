@@ -47,12 +47,12 @@ public class FsResourceProvider implements IResourceProvider {
 			if (f.exists()) {
 				File [] listing = f.listFiles();
 				
-				List<IDocumentResource> documentListing = new ArrayList<>(listing.length);
+				List<IResource> documentListing = new ArrayList<>(listing.length);
 				for (File file : listing) {
-					documentListing.add(new Document(file));
+					documentListing.add(ResourceFactory.create(file));
 				}
 				
-				callback.f(new Directory(documentListing), null);
+				callback.f(new Directory(f.getName(), documentListing), null);
 			} else {
 				callback.f(null, new FileNotFoundException("File not found for: " + path));
 			}

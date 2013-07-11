@@ -84,8 +84,12 @@ public class ReadRouteHandler extends RouteHandlerAdapter {
 			IDirectoryResource dir = (IDirectoryResource)p1;
 			
 			Map<String, String> result = new LinkedHashMap<>();
-			for (IDocumentResource f : dir.getListing()) {
-				result.put(f.getName(), f.getVersion());
+			for (IResource f : dir.getListing()) {
+				if (f instanceof IDirectoryResource) {
+					result.put(f.getName() + "/", f.getVersion());
+				} else {
+					result.put(f.getName(), f.getVersion());
+				}
 			}
 			
 			StringBuilder b = new StringBuilder();
