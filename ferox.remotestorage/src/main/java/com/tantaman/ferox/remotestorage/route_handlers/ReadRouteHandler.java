@@ -5,6 +5,8 @@ import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.LastHttpContent;
 import io.netty.handler.stream.ChunkedStream;
+import io.netty.util.concurrent.Future;
+import io.netty.util.concurrent.GenericFutureListener;
 
 import java.io.FileNotFoundException;
 import java.text.ParseException;
@@ -83,10 +85,6 @@ public class ReadRouteHandler extends RouteHandlerAdapter {
 			
 			Map<String, String> result = new LinkedHashMap<>();
 			for (IDocumentResource f : dir.getListing()) {
-//				if (f.isHidden() || !f.canRead()) {
-//	                continue;
-//	            }
-				
 				result.put(f.getName(), f.getVersion());
 			}
 			
@@ -95,7 +93,7 @@ public class ReadRouteHandler extends RouteHandlerAdapter {
 		}
 	}
 	
-	private void returnDocument(IDocumentResource doc, IResponse response, IHttpContent request) throws ParseException, FileNotFoundException {
+	private void returnDocument(final IDocumentResource doc, IResponse response, IHttpContent request) throws ParseException, FileNotFoundException {
 		// Cache Validation
         String ifModifiedSince = request.getHeaders().get(HttpHeaders.Names.IF_MODIFIED_SINCE);
         if (ifModifiedSince != null && !ifModifiedSince.isEmpty()) {
@@ -123,7 +121,11 @@ public class ReadRouteHandler extends RouteHandlerAdapter {
         response.fineGrained().add(new ChunkedStream(doc.getStream(), 8192));
         response.fineGrained().add(LastHttpContent.EMPTY_LAST_CONTENT);
 
-        response.fineGrained().write();
+        response.fineGrained().write().addListener(new GenericFutureListener<Future<? super Void>>() {
+        	public void operationComplete(Future<? super Void> arg0) throws Exception {
+        		doc.close();
+        	};
+		});
 	}
 	
 	private static void sendNotModified(IResponse response) {

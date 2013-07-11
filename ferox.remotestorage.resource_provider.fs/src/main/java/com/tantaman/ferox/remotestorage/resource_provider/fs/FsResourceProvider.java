@@ -54,7 +54,7 @@ public class FsResourceProvider implements IResourceProvider {
 				
 				callback.f(new Directory(documentListing), null);
 			} else {
-				callback.f(null, new FileNotFoundException());
+				callback.f(null, new FileNotFoundException("File not found for: " + path));
 			}
 		} else {
 			File f = new File(path);

@@ -16,15 +16,25 @@ import com.tantaman.lo4j.Lo;
  */
 public class AuthenticationManager {
 	private static final ExecutorService AUTH_LOOKUP = Executors.newFixedThreadPool(1);
+	private IAuthRepo scopeRepository;
 	
 	public void addAuthentication(Authentication auth, Lo.Fn<Void, Void> callback) {
 		
+	}
+	
+	void setScopeRepository(IAuthRepo scopeRepository) {
+		this.scopeRepository = scopeRepository;
 	}
 
 	public void isAuthorized(final IResourceIdentifier resource,
 			final String authorization, 
 			final HttpMethod method,
 			final Lo.VFn2<Boolean, Throwable> callback) {
+		if (resource.isPublic() && method == HttpMethod.GET) {
+			callback.f(true, null);
+			return;
+		}
+		
 		// TODO: convert parameters to:
 		// 1. authorization
 		// 2. requested scope
@@ -42,6 +52,12 @@ public class AuthenticationManager {
 			final String authorization, 
 			final HttpMethod method,
 			final Lo.VFn2<Boolean, Throwable> callback) {
+		// use the bearer token
+		// to look up scopes
+		// Set<Scopes> scopes = scopeRepository.getScopes(authorization);
+		// Scope requestScope = new Scope(resource, method);
+		// callback.f(scopes.contains(requestScope), null);
+		
 		callback.f(false, null);
 	}
 }

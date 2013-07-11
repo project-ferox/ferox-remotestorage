@@ -28,6 +28,8 @@ public class Document implements IDocumentResource {
 	public void close() throws IOException {
 		if (stream != null)
 			stream.close();
+		if (randomAccessFile != null)
+			randomAccessFile.close();
 	}
 
 	@Override
