@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.tantaman.ferox.remotestorage.ConfigKeys;
 import com.tantaman.ferox.remotestorage.resource.IResource;
 import com.tantaman.ferox.remotestorage.resource.IResourceIdentifier;
@@ -13,15 +16,21 @@ import com.tantaman.ferox.remotestorage.resource.IResourceProvider;
 import com.tantaman.lo4j.Lo;
 
 public class FsResourceProvider implements IResourceProvider {
+	private static final Logger log = LoggerFactory.getLogger(FsResourceProvider.class);
 	private String fsRoot;
 	
 	public void activate(Map<String, String> configuration) {
+		log.debug("Received configuration");
 		fsRoot = configuration.get(ConfigKeys.FS_STORAGE_ROOT);
 	}
 	
 	@Override
 	public void getResource(final IResourceIdentifier identifier, final Lo.VFn2<IResource, Throwable> callback) throws IllegalStateException {
-		if (identifier.getModule().equals(".metadata")) throw new IllegalStateException("Illegal module");
+		log.debug("Received request for a resource");
+		if (identifier.getModule().equals(".metadata")) {
+			log.debug("Illegal module accessed");
+			throw new IllegalStateException("Illegal module");
+		}
 		
 		Workers.FS_EVENT_QUEUE.execute(new Runnable() {
 			@Override
@@ -32,6 +41,7 @@ public class FsResourceProvider implements IResourceProvider {
 	}
 	
 	private void retrieveResource(IResourceIdentifier identifier, Lo.VFn2<IResource, Throwable> callback) {
+		log.debug("Retrieving resource on FS_EVENT_QUEUE");
 		String uri = identifier.getUserRelativerUri();
 		
 		String path = fsRoot + "/" + identifier.getUser() + "/" + uri.replace("..", "");
@@ -56,11 +66,7 @@ public class FsResourceProvider implements IResourceProvider {
 		} else {
 			File f = new File(path);
 			if (f.exists()) {
-				try {
-					callback.f(new Document(f), null);
-				} catch (Exception e) {
-					callback.f(null, e);
-				}
+				callback.f(new Document(f), null);
 			} else {
 				callback.f(null, new FileNotFoundException());
 			}

@@ -19,6 +19,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.tantaman.ferox.api.request_response.IHttpContent;
 import com.tantaman.ferox.api.request_response.IRequestChainer;
 import com.tantaman.ferox.api.request_response.IResponse;
@@ -35,6 +38,7 @@ public class ReadRouteHandler extends RouteHandlerAdapter {
 	public static final String HTTP_DATE_FORMAT = "EEE, dd MMM yyyy HH:mm:ss zzz";
     public static final String HTTP_DATE_GMT_TIMEZONE = "GMT";
     public static final int HTTP_CACHE_SECONDS = 60;
+    private static final Logger log = LoggerFactory.getLogger(ReadRouteHandler.class);
 	
 	public ReadRouteHandler(IResourceProvider resourceProvider) {
 		this.resourceProvider = resourceProvider;
@@ -64,7 +68,6 @@ public class ReadRouteHandler extends RouteHandlerAdapter {
 				}
 			});
 		} catch (IllegalStateException e) {
-			// TODO: get the responses statuses right.
 			content.dispose();
 			response.send(e.getMessage(), HttpResponseStatus.BAD_REQUEST);
 		}
@@ -76,8 +79,10 @@ public class ReadRouteHandler extends RouteHandlerAdapter {
 			try {
 				returnDocument(doc, response, request);
 			} catch (ParseException e) {
+				log.warn("Couldn't parse request");
 				response.send(Lo.asJsonObject(new Object [] {"status", "bad_request"}), "application/json", HttpResponseStatus.BAD_REQUEST);
 			} catch (FileNotFoundException e) {
+				log.warn("File not found");
 				response.send(Lo.asJsonObject(new Object [] {"status", "not_found"}), "application/json", HttpResponseStatus.NOT_FOUND);
 			}
 		} else if (p1 instanceof IDirectoryResource) {

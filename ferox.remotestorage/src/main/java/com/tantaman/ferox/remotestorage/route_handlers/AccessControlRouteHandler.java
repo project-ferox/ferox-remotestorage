@@ -1,5 +1,8 @@
 package com.tantaman.ferox.remotestorage.route_handlers;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.netty.channel.ChannelFutureListener;
 import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpResponseStatus;
@@ -14,6 +17,8 @@ import com.tantaman.ferox.remotestorage.resource.IResourceIdentifier;
 import com.tantaman.lo4j.Lo;
 
 public class AccessControlRouteHandler implements IRouteHandler {
+	private static final Logger log = LoggerFactory.getLogger(AccessControlRouteHandler.class);
+	
 	private final AuthenticationManager authRepo;
 	private boolean authorized = false;
 	
@@ -36,6 +41,7 @@ public class AccessControlRouteHandler implements IRouteHandler {
 							AccessControlRouteHandler.this.authorized = true;
 							next.request(request);
 						} else {
+							log.debug("Authorization failed");
 							response.send("{\"status\": \"unauthorized\"}", "application/json", HttpResponseStatus.UNAUTHORIZED)
 							.addListener(ChannelFutureListener.CLOSE);
 							request.dispose();

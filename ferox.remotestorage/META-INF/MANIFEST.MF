@@ -11,7 +11,8 @@ Import-Package: com.tantaman.ferox.api.request_response,
  io.netty.channel;version="4.0.0.CR5-SNAPSHOT",
  io.netty.handler.codec.http;version="4.0.0.CR5-SNAPSHOT",
  io.netty.handler.stream;version="4.0.0.CR5-SNAPSHOT",
- io.netty.util.concurrent;version="4.0.0.CR5-SNAPSHOT"
+ io.netty.util.concurrent;version="4.0.0.CR5-SNAPSHOT",
+ org.slf4j;provider=paxlogging
 Service-Component: OSGI-INF/*
 Export-Package: com.tantaman.ferox.remotestorage,
  com.tantaman.ferox.remotestorage.auth_management,

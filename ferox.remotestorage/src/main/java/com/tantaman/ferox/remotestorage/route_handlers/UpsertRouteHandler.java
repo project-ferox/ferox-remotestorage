@@ -1,11 +1,15 @@
 package com.tantaman.ferox.remotestorage.route_handlers;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.tantaman.ferox.api.request_response.IHttpContent;
 import com.tantaman.ferox.api.request_response.IRequestChainer;
 import com.tantaman.ferox.api.request_response.IResponse;
 import com.tantaman.ferox.api.router.RouteHandlerAdapter;
 
 public class UpsertRouteHandler extends RouteHandlerAdapter {
+	private static final Logger log = LoggerFactory.getLogger(UpsertRouteHandler.class);
 	
 	@Override
 	public void content(IHttpContent content, IResponse response,
