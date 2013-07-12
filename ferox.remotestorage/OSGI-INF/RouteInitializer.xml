@@ -4,6 +4,8 @@
   <implementation class="com.tantaman.ferox.remotestorage.RouteInitializer"/>
   <reference bind="setResourceProvider" cardinality="1..1"
    	interface="com.tantaman.ferox.remotestorage.resource.IResourceProvider" name="resourceProvider"/>
+  <reference bind="setScopeRepository" unbind="unsetScopeRepository" cardinality="0..1" policy="dynamic"
+   	interface="com.tantaman.ferox.remotestorage.auth_management.IAuthRepo" name="authRepo"/>
   <service>
     <provide interface="com.tantaman.ferox.api.router.IRouteInitializer"/>
   </service>

@@ -4,7 +4,8 @@ Bundle-Name: remotestorage.auth_repo.derby
 Bundle-SymbolicName: ferox.remotestorage.auth_repo.mapdb
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Service-Component: OSGI-INF/*
 Import-Package: com.tantaman.ferox.remotestorage.auth_management,
  com.tantaman.ferox.util;version="1.0.0",
- com.tantaman.lo4j;version="1.0.0",
- org.mapdb
+ org.mapdb,
+ org.slf4j;provider=paxlogging

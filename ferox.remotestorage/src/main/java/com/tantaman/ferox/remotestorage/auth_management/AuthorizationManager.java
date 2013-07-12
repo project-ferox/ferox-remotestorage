@@ -22,14 +22,43 @@ import com.tantaman.lo4j.Lo;
 public class AuthorizationManager {
 	private static final Logger log = LoggerFactory.getLogger(AuthorizationManager.class);
 	private static final ExecutorService AUTH_LOOKUP = Executors.newFixedThreadPool(1);
-	private IAuthRepo scopeRepository;
+	private volatile IAuthRepo scopeRepository; // TODO: may need to be AtomicReference?  Could it be getting set and unset at the same time and require a CAS? does it matter?
 	
-	public void addAuthorization(Authorization auth, Lo.Fn<Void, Void> callback) {		
-		scopeRepository.addScopes(auth.getAccessToken(), auth.getUsername(), auth.getScopes());
+	public void addAuthorization(Authorization auth, Lo.Fn<Void, Void> callback) {
+		IAuthRepo scopeRepository = this.scopeRepository;
+		if (scopeRepository != null)
+			scopeRepository.addScopes(auth.getAccessToken(), auth.getUsername(), auth.getScopes());
 	}
 	
-	void setScopeRepository(IAuthRepo scopeRepository) {
+	public void removeAuthorization(Authorization auth) {
+		IAuthRepo scopeRepository = this.scopeRepository;
+		if (scopeRepository != null)
+			scopeRepository.removeScopes(auth.getAccessToken(), auth.getScopes());
+	}
+	
+	public void revokeAuthorization(Authorization auth) {
+		IAuthRepo scopeRepository = this.scopeRepository;
+		if (scopeRepository != null)
+			scopeRepository.revokeAccess(auth.getAccessToken());
+	}
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public void setScopeRepository(IAuthRepo scopeRepository) {
+		log.debug("Scope repository set " + this);
 		this.scopeRepository = scopeRepository;
+		
+		/*
+		 * TODO: FIXME: Temp debug code
+		 */
+		scopeRepository.addScopes("token", "matt", (Set)Lo.createSet("documents:rw"));
+		/*
+		 * end debug code
+		 */
+	}
+	
+	public void unsetScopeRepository() {
+		log.debug("Scope repository unset");
+		this.scopeRepository = null;
 	}
 
 	public void isAuthorized(final IResourceIdentifier resource,
@@ -40,11 +69,20 @@ public class AuthorizationManager {
 			callback.f(true, null);
 			return;
 		}
-
+		
+		String temp = "";
+		try {
+			temp = authorization.split(" ")[1];
+		} catch (Exception e) {
+			callback.f(false, null);
+			return;
+		}
+		
+		final String bearerToken = temp;
 		AUTH_LOOKUP.execute(new Runnable() {
 			@Override
 			public void run() {
-				determineAuthorization(resource, authorization, method, callback);
+				determineAuthorization(resource, bearerToken, method, callback);
 			}
 		});
 	}
@@ -52,8 +90,8 @@ public class AuthorizationManager {
 	private void determineAuthorization(final IResourceIdentifier resource,
 			final String bearerToken, 
 			final HttpMethod method,
-			final Lo.VFn2<Boolean, Throwable> callback) {
-		
+			final Lo.VFn2<Boolean, Throwable> callback) {		
+		IAuthRepo scopeRepository = this.scopeRepository;
 		if (scopeRepository != null) {
 			IPair<String, Set<String>> userAndScopes = scopeRepository.getScopes(bearerToken);
 			
@@ -80,7 +118,7 @@ public class AuthorizationManager {
 				return;
 			}
 		} else {
-			log.warn("No authorization repo");
+			log.warn("No authorization repo " + this);
 			callback.f(false, null);
 			return;
 		}

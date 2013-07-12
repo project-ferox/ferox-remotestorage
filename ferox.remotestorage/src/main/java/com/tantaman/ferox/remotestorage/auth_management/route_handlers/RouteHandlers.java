@@ -1,4 +1,4 @@
-package com.tantaman.ferox.remotestorage.auth_management;
+package com.tantaman.ferox.remotestorage.auth_management.route_handlers;
 
 import io.netty.handler.codec.http.HttpResponseStatus;
 
@@ -10,14 +10,14 @@ import com.tantaman.ferox.api.request_response.IResponse;
 import com.tantaman.ferox.api.router.RouteHandlerAdapter;
 
 public class RouteHandlers {
-	public static class AddTokenHandler extends RouteHandlerAdapter {
+	public static class AddAuthorizationHandler extends RouteHandlerAdapter {
 		@Override
 		public void lastContent(IHttpContent content, IResponse response,
 				IRequestChainer next) {
 		}
 	}
 	
-	public static class RemoveTokenHandler extends RouteHandlerAdapter {
+	public static class RemoveAuthorizationHandler extends RouteHandlerAdapter {
 		@Override
 		public void lastContent(IHttpContent content, IResponse response,
 				IRequestChainer next) {

@@ -7,6 +7,7 @@ import com.tantaman.ferox.api.router.IRouteInitializer;
 import com.tantaman.ferox.api.router.IRouterBuilder;
 import com.tantaman.ferox.remotestorage.auth_management.AuthManagerRouteInitializer;
 import com.tantaman.ferox.remotestorage.auth_management.AuthorizationManager;
+import com.tantaman.ferox.remotestorage.auth_management.IAuthRepo;
 import com.tantaman.ferox.remotestorage.resource.IResourceProvider;
 import com.tantaman.ferox.remotestorage.route_handlers.HandlerFactories;
 import com.tantaman.ferox.remotestorage.webfinger.WebfingerMiddlewareInitializer;
@@ -29,6 +30,14 @@ public class RouteInitializer implements IRouteInitializer {
 	
 	void setResourceProvider(IResourceProvider resourceProvider) {
 		this.resourceProvider = resourceProvider;
+	}
+	
+	void setScopeRepository(IAuthRepo scopeRepo) {
+		authRepository.setScopeRepository(scopeRepo);
+	}
+	
+	void unsetScopeRepository() {
+		authRepository.unsetScopeRepository();
 	}
 	
 	public void activate(Map<String, String> configuration) {

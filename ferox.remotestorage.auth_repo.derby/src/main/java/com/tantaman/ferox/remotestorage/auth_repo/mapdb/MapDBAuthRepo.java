@@ -8,12 +8,15 @@ import java.util.Set;
 import org.mapdb.BTreeMap;
 import org.mapdb.DB;
 import org.mapdb.DBMaker;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.tantaman.ferox.remotestorage.auth_management.IAuthRepo;
 import com.tantaman.ferox.util.IPair;
 import com.tantaman.ferox.util.Pair;
 
 public class MapDBAuthRepo implements IAuthRepo {
+	private static final Logger log = LoggerFactory.getLogger(MapDBAuthRepo.class);
 	private volatile DB db;
 	// Map from bearerToken -> (username, (scopes...))
 	private volatile BTreeMap<String, IPair<String, Set<String>>> authMap;
@@ -24,6 +27,7 @@ public class MapDBAuthRepo implements IAuthRepo {
 	}
 	
 	public void activate(Map<String, String> configuration) {
+		log.debug("Activating the auth repo");
 		String password = configuration.get(ConfigKeys.PASSWORD);
 		String file = configuration.get(ConfigKeys.FILE);
 		String cacheSize = configuration.get(ConfigKeys.CACHE_SIZE);
@@ -61,9 +65,12 @@ public class MapDBAuthRepo implements IAuthRepo {
 		
 		db = maker.make();
 		authMap = db.getTreeMap(collectionName);
+		
+		log.debug("Database made: " + db);
 	}
 	
 	public void deactivate() {
+		log.debug("Deactivating the auth repo");
 		db.close();
 	}
 	
