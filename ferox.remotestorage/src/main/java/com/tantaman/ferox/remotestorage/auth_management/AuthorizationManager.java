@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.tantaman.ferox.remotestorage.resource.IResourceIdentifier;
+import com.tantaman.ferox.util.IPair;
 import com.tantaman.lo4j.Lo;
 
 
@@ -24,7 +25,7 @@ public class AuthorizationManager {
 	private IAuthRepo scopeRepository;
 	
 	public void addAuthorization(Authorization auth, Lo.Fn<Void, Void> callback) {		
-		scopeRepository.addScopes(auth.getAccessToken(), auth.getScopes());
+		scopeRepository.addScopes(auth.getAccessToken(), auth.getUsername(), auth.getScopes());
 	}
 	
 	void setScopeRepository(IAuthRepo scopeRepository) {
@@ -54,7 +55,14 @@ public class AuthorizationManager {
 			final Lo.VFn2<Boolean, Throwable> callback) {
 		
 		if (scopeRepository != null) {
-			Set<String> scopes = scopeRepository.getScopes(bearerToken);
+			IPair<String, Set<String>> userAndScopes = scopeRepository.getScopes(bearerToken);
+			
+			if (!resource.getUser().equals(userAndScopes.getFirst())) {
+				callback.f(false, null);
+				return;
+			}
+			
+			Set<String> scopes = userAndScopes.getSecond();
 			
 			if (method == HttpMethod.GET) {
 				if (hasModuleReadAccess(scopes, resource.getModule())) {

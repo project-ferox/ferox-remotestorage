@@ -1,6 +1,6 @@
 <?xml version='1.1'?>
 
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" configuration-policy="require" name="ferox.remotestorage.RouteInitializer">
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" configuration-policy="require" name="ferox.remotestorage.route_initializer">
   <implementation class="com.tantaman.ferox.remotestorage.RouteInitializer"/>
   <reference bind="setResourceProvider" cardinality="1..1"
    	interface="com.tantaman.ferox.remotestorage.resource.IResourceProvider" name="resourceProvider"/>

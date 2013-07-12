@@ -2,6 +2,5 @@
 
 <scr:component name="ferox.remotestorage.standalone.Server" xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" immediate="true">
   <implementation class="com.tantaman.ferox.remotestorage.server.standalone.Main"/>
-  <reference name="configAdmin" cardinality="1..1" interface="org.osgi.service.cm.ConfigurationAdmin" bind="setConfigAdmin"/>
   <reference name="pluggableServer" cardinality="1..1" interface="com.tantaman.ferox.api.server.IPluggableServer" bind="setPluggableServer"/>
 </scr:component>

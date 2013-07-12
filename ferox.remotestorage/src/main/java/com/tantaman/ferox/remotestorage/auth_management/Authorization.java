@@ -6,14 +6,20 @@ import java.util.Set;
 public class Authorization {
 	private final String accessToken;
 	private final Set<String> scopes;
+	private final String username;
 	
-	public Authorization(String accessToken, Set<String> scopes) {
+	public Authorization(String accessToken, String username, Set<String> scopes) {
 		this.scopes = scopes;
 		this.accessToken = accessToken;
+		this.username = username;
 	}
 	
 	public String getAccessToken() {
 		return accessToken;
+	}
+	
+	public String getUsername() {
+		return username;
 	}
 	
 	public Set<String> getScopes() {
