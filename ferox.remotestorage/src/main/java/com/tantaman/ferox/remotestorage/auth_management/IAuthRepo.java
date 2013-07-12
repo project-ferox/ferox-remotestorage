@@ -1,7 +1,8 @@
 package com.tantaman.ferox.remotestorage.auth_management;
 
-import java.util.List;
+import java.util.Set;
 
 public interface IAuthRepo {
-	public List<String> getScopes(String bearerToken);
+	public Set<String> getScopes(String bearerToken);
+	public void addScopes(String beString, Set<String> scopes);
 }

@@ -12,17 +12,17 @@ import com.tantaman.ferox.api.request_response.IHttpRequest;
 import com.tantaman.ferox.api.request_response.IRequestChainer;
 import com.tantaman.ferox.api.request_response.IResponse;
 import com.tantaman.ferox.api.router.IRouteHandler;
-import com.tantaman.ferox.remotestorage.auth_management.AuthenticationManager;
+import com.tantaman.ferox.remotestorage.auth_management.AuthorizationManager;
 import com.tantaman.ferox.remotestorage.resource.IResourceIdentifier;
 import com.tantaman.lo4j.Lo;
 
 public class AccessControlRouteHandler implements IRouteHandler {
 	private static final Logger log = LoggerFactory.getLogger(AccessControlRouteHandler.class);
 	
-	private final AuthenticationManager authRepo;
+	private final AuthorizationManager authRepo;
 	private boolean authorized = false;
 	
-	public AccessControlRouteHandler(AuthenticationManager authRepo) {
+	public AccessControlRouteHandler(AuthorizationManager authRepo) {
 		this.authRepo = authRepo;
 	}
 	

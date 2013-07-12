@@ -26,7 +26,6 @@ public class FsResourceProvider implements IResourceProvider {
 	
 	@Override
 	public void getResource(final IResourceIdentifier identifier, final Lo.VFn2<IResource, Throwable> callback) throws IllegalStateException {
-		log.debug("Received request for a resource");
 		if (identifier.getModule().equals(".metadata")) {
 			log.debug("Illegal module accessed");
 			throw new IllegalStateException("Illegal module");
@@ -41,7 +40,6 @@ public class FsResourceProvider implements IResourceProvider {
 	}
 	
 	private void retrieveResource(IResourceIdentifier identifier, Lo.VFn2<IResource, Throwable> callback) {
-		log.debug("Retrieving resource on FS_EVENT_QUEUE");
 		String uri = identifier.getUserRelativerUri();
 		
 		String path = fsRoot + "/" + identifier.getUser() + "/" + uri.replace("..", "");

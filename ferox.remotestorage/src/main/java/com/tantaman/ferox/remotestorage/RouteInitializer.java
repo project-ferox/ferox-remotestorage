@@ -6,7 +6,7 @@ import com.tantaman.ferox.api.router.IRouteHandlerFactory;
 import com.tantaman.ferox.api.router.IRouteInitializer;
 import com.tantaman.ferox.api.router.IRouterBuilder;
 import com.tantaman.ferox.remotestorage.auth_management.AuthManagerRouteInitializer;
-import com.tantaman.ferox.remotestorage.auth_management.AuthenticationManager;
+import com.tantaman.ferox.remotestorage.auth_management.AuthorizationManager;
 import com.tantaman.ferox.remotestorage.resource.IResourceProvider;
 import com.tantaman.ferox.remotestorage.route_handlers.HandlerFactories;
 import com.tantaman.ferox.remotestorage.webfinger.WebfingerMiddlewareInitializer;
@@ -18,11 +18,11 @@ public class RouteInitializer implements IRouteInitializer {
 	private String storageRootUri;
 	private IResourceProvider resourceProvider;
 	private final AuthManagerRouteInitializer authManagerInit;
-	private final AuthenticationManager authRepository;
+	private final AuthorizationManager authRepository;
 	private final WebfingerMiddlewareInitializer webfingerMiddlewareInit;
 	
 	public RouteInitializer() {
-		authRepository = new AuthenticationManager();
+		authRepository = new AuthorizationManager();
 		authManagerInit = new AuthManagerRouteInitializer();
 		webfingerMiddlewareInit = new WebfingerMiddlewareInitializer();
 	}
