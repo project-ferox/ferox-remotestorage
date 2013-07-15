@@ -35,12 +35,12 @@ public class Factories {
 		};
 	}
 
-	public static IRouteHandlerFactory registrationPage() {
+	public static IRouteHandlerFactory registrationPage(final String templateRoot) {
 		return new IRouteHandlerFactory() {
 			
 			@Override
 			public IRouteHandler create() {
-				return new RegistrationPageHandler();
+				return new RegistrationPageHandler(templateRoot);
 			}
 		};
 	}

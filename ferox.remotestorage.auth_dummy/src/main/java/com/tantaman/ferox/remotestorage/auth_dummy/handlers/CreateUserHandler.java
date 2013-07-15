@@ -45,9 +45,9 @@ public class CreateUserHandler extends RouteHandlerAdapter {
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
+		} finally {
+			content.dispose();
 		}
-		
-		content.dispose();
 	}
 
 }

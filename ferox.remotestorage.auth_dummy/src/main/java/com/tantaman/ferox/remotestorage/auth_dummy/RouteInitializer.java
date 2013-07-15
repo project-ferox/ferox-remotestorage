@@ -34,7 +34,7 @@ public class RouteInitializer implements IRouteInitializer {
 		routerBuilder.get(uriRoot + "/static/**", RouteMiddleware.staticContent(staticFsRoot));
 		
 		routerBuilder.get(uriRoot + "/dialog", Factories.loginPage(templateFsRoot));
-		routerBuilder.get(uriRoot + "/registrations", Factories.registrationPage());
+		routerBuilder.get(uriRoot + "/registrations", Factories.registrationPage(templateFsRoot));
 		
 		routerBuilder.post(uriRoot + "/dialog", RouteMiddleware.bodyParser());
 		routerBuilder.post(uriRoot + "/dialog", Factories.authenticate(userRepo));

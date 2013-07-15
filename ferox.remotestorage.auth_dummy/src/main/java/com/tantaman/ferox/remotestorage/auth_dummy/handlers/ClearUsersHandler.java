@@ -17,5 +17,6 @@ public class ClearUsersHandler extends RouteHandlerAdapter {
 	public void lastContent(IHttpContent content, IResponse response,
 			IRequestChainer next) {
 		userRepo.clearUsers();
+		response.send("Users cleared");
 	}
 }

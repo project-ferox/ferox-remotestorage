@@ -19,11 +19,11 @@ public class RouteInitializer implements IRouteInitializer {
 	private String storageRootUri;
 	private IResourceProvider resourceProvider;
 	private final AuthManagerRouteInitializer authManagerInit;
-	private final AuthorizationManager authRepository;
+	private final AuthorizationManager authManager;
 	private final WebfingerMiddlewareInitializer webfingerMiddlewareInit;
 	
 	public RouteInitializer() {
-		authRepository = new AuthorizationManager();
+		authManager = new AuthorizationManager();
 		authManagerInit = new AuthManagerRouteInitializer();
 		webfingerMiddlewareInit = new WebfingerMiddlewareInitializer();
 	}
@@ -33,11 +33,11 @@ public class RouteInitializer implements IRouteInitializer {
 	}
 	
 	void setScopeRepository(IAuthRepo scopeRepo) {
-		authRepository.setScopeRepository(scopeRepo);
+		authManager.setScopeRepository(scopeRepo);
 	}
 	
 	void unsetScopeRepository() {
-		authRepository.unsetScopeRepository();
+		authManager.unsetScopeRepository();
 	}
 	
 	public void activate(Map<String, String> configuration) {
@@ -51,7 +51,7 @@ public class RouteInitializer implements IRouteInitializer {
 	public void addRoutes(IRouterBuilder routerBuilder) {
 		String route = storageRootUri + "/:user/**";
 		IRouteHandlerFactory identifierBuilderFactory = HandlerFactories.identifierBuilder(storageRootUri);
-		IRouteHandlerFactory accessControl = HandlerFactories.accessControl(authRepository);
+		IRouteHandlerFactory accessControl = HandlerFactories.accessControl(authManager);
 		IRouteHandlerFactory read = HandlerFactories.read(resourceProvider);
 		
 		routerBuilder.get(route, identifierBuilderFactory);		
