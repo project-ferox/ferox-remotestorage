@@ -12,8 +12,10 @@ public class Main {
 		// the remoteStorage spec calls to just save the entire request body as the contents
 		// of the document.  This seems rather restrictive as
 		// remoteStorage will never be able to support file uploads in a sensible manner.
-//		server.use(Middleware.BODY_PARSER);
 		
+		// We don't want to ever use the body parser since in 99% of the cases 
+		// where a user is putting to RS it won't be applicable.
+//		server.use(ChannelMiddleware.BODY_PARSER);
 		log.debug("RemoteStorage listening on 8080");
 		server.listen(8080, false);
 	}

@@ -3,7 +3,8 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Auth_dummy
 Bundle-SymbolicName: ferox.remotestroage.auth_dummy
 Bundle-Version: 1.0.0.qualifier
-Import-Package: com.tantaman.ferox.api.router,
+Import-Package: com.tantaman.ferox.api.request_response,
+ com.tantaman.ferox.api.router,
  com.tantaman.ferox.route_middelware
 Service-Component: OSGI-INF/*
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
