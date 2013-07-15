@@ -1,5 +1,7 @@
 package com.tantaman.ferox.remotestorage.route_handlers;
 
+import java.net.URLDecoder;
+
 import io.netty.channel.ChannelFutureListener;
 import io.netty.handler.codec.http.HttpResponseStatus;
 
@@ -23,7 +25,7 @@ public class IdentifierBuilderRouteHandler extends RouteHandlerAdapter {
 		try {
 			IResourceIdentifier identifier = new DefaultResourceIdentifier(
 				request.getUrlParam("user"),
-				request.getUri().replace(rootUri + "/" + request.getUrlParam("user"), ""));
+				URLDecoder.decode(request.getUri(), "UTF-8").replace(rootUri + "/" + request.getUrlParam("user"), ""));
 			response.setUserData(identifier);
 			next.request(request);
 		} catch (Exception e) {

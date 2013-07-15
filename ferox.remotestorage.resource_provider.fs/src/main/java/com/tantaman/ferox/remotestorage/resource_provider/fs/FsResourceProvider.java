@@ -42,13 +42,19 @@ public class FsResourceProvider implements IResourceProvider {
 	private void retrieveResource(IResourceIdentifier identifier, Lo.VFn2<IResource, Throwable> callback) {
 		String uri = identifier.getUserRelativerUri();
 		
-		String path = fsRoot + "/" + identifier.getUser() + "/" + uri.replace("..", "");
+		String prefix = fsRoot + "/" + identifier.getUser();
+		String path = prefix + "/" + uri.replace("..", "");
 		
 		if (identifier.isDir()) {
 			// do the directory listing
 			// TODO: spec has some weird stuff about empty folders
 			// (e.g., saying they don't exist and not listing them)
 			File f = new File(path);
+			if (!f.getAbsolutePath().startsWith(new File(prefix).getAbsolutePath())) {
+				log.debug(prefix + " " + f.getAbsolutePath());
+				callback.f(null, new IllegalAccessException("Denied path"));
+			}
+			
 			if (f.exists()) {
 				File [] listing = f.listFiles();
 				

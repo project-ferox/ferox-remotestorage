@@ -1,5 +1,7 @@
 package com.tantaman.ferox.remotestorage.resource;
 
+import java.util.regex.Pattern;
+
 public class DefaultResourceIdentifier implements IResourceIdentifier {
 	private final String relativeUri;
 	private final String user;
@@ -8,10 +10,15 @@ public class DefaultResourceIdentifier implements IResourceIdentifier {
 	private final boolean isDir;
 	private final String moduleRelativeUri;
 	
+	private static final Pattern VALID_USER_PATTERN = Pattern.compile("[a-zA-Z0-9_-]+"); // TODO: other chars..?
+	
 	public DefaultResourceIdentifier(String user, String relativeUri) {
 		if (relativeUri.startsWith("/")) {
 			relativeUri = relativeUri.substring(1);
 		}
+		
+		if (!VALID_USER_PATTERN.matcher(user).matches())
+			throw new IllegalStateException("Username isn't a valid pattern"); 
 		
 		this.user = user;
 		this.relativeUri = relativeUri;

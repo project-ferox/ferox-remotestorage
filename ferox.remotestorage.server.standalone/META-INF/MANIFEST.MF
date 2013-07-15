@@ -6,10 +6,10 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Import-Package: com.tantaman.ferox.api;version="1.0.0",
  com.tantaman.ferox.api.server,
- com.tantaman.ferox.middleware,
+ com.tantaman.ferox.channel_middleware,
  com.tantaman.ferox.remotestorage,
  io.netty.channel;version="4.0.0.CR5-SNAPSHOT",
  org.osgi.framework;version="1.7.0",
  org.osgi.service.cm;version="1.4.0",
- org.slf4j;version="1.7.1";provider=paxlogging
+ org.slf4j;provider=paxlogging;version="1.7.1"
 Service-Component: OSGI-INF/*
