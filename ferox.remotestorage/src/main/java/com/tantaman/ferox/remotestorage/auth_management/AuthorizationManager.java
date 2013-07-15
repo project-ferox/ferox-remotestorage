@@ -46,14 +46,6 @@ public class AuthorizationManager {
 	public void setScopeRepository(IAuthRepo scopeRepository) {
 		log.debug("Scope repository set " + this);
 		this.scopeRepository = scopeRepository;
-		
-		/*
-		 * TODO: FIXME: Temp debug code
-		 */
-		scopeRepository.addScopes("token", "matt", (Set)Lo.createSet("documents:rw"));
-		/*
-		 * end debug code
-		 */
 	}
 	
 	public void unsetScopeRepository() {
