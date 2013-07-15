@@ -1,10 +1,17 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Auth_dummy
-Bundle-SymbolicName: ferox.remotestroage.auth_dummy
+Bundle-SymbolicName: ferox.remotestorage.auth_dummy
 Bundle-Version: 1.0.0.qualifier
 Import-Package: com.tantaman.ferox.api.request_response,
  com.tantaman.ferox.api.router,
- com.tantaman.ferox.route_middelware
+ com.tantaman.ferox.route_middelware,
+ com.tantaman.lo4j;version="1.0.0",
+ io.netty.channel;version="4.0.0.CR5-SNAPSHOT",
+ io.netty.handler.codec;version="4.0.0.CR5-SNAPSHOT",
+ io.netty.handler.codec.http;version="4.0.0.CR5-SNAPSHOT",
+ io.netty.handler.codec.http.multipart;version="4.0.0.CR5-SNAPSHOT",
+ org.mapdb,
+ org.stringtemplate.v4
 Service-Component: OSGI-INF/*
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7

@@ -1,6 +1,6 @@
 <?xml version='1.1'?>
 
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" configuration-policy="require" name="ferox.remotestorage.auth_repo">
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" configuration-policy="require" deactivate="deactivate" name="ferox.remotestorage.auth_repo">
   <implementation class="com.tantaman.ferox.remotestorage.auth_repo.mapdb.MapDBAuthRepo"/>
   <service>
     <provide interface="com.tantaman.ferox.remotestorage.auth_management.IAuthRepo"/>

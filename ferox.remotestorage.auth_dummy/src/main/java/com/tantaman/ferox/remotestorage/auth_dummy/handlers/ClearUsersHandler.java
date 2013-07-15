@@ -1,20 +1,21 @@
-package com.tantaman.ferox.remotestroage.auth_dummy.handlers;
+package com.tantaman.ferox.remotestorage.auth_dummy.handlers;
 
 import com.tantaman.ferox.api.request_response.IHttpContent;
 import com.tantaman.ferox.api.request_response.IRequestChainer;
 import com.tantaman.ferox.api.request_response.IResponse;
 import com.tantaman.ferox.api.router.RouteHandlerAdapter;
+import com.tantaman.ferox.remotestorage.auth_dummy.auth.UserRepo;
 
-public class DialogGetHandler extends RouteHandlerAdapter {
-	private final String templateRoot;
-	public DialogGetHandler(String templateRoot) {
-		this.templateRoot = templateRoot;
-	}
+public class ClearUsersHandler extends RouteHandlerAdapter {
+	private final UserRepo userRepo;
 	
+	public ClearUsersHandler(UserRepo userRepo) {
+		this.userRepo = userRepo;
+	}
+
 	@Override
 	public void lastContent(IHttpContent content, IResponse response,
 			IRequestChainer next) {
-		
-		next.content(content);
+		userRepo.clearUsers();
 	}
 }

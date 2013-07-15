@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import com.tantaman.ferox.remotestorage.auth_management.IAuthRepo;
 import com.tantaman.ferox.util.IPair;
 import com.tantaman.ferox.util.Pair;
+import com.tantaman.lo4j.Lo;
 
 public class MapDBAuthRepo implements IAuthRepo {
 	private static final Logger log = LoggerFactory.getLogger(MapDBAuthRepo.class);
@@ -66,6 +67,9 @@ public class MapDBAuthRepo implements IAuthRepo {
 		db = maker.make();
 		authMap = db.getTreeMap(collectionName);
 		
+//		authMap.put("token", new Pair<String, Set<String>>("matt", (Set)Lo.createSet("root:rw")));
+//		db.commit();
+		
 		log.debug("Database made: " + db);
 	}
 	
@@ -84,21 +88,28 @@ public class MapDBAuthRepo implements IAuthRepo {
 			Set<String> scopes) {
 		IPair<String, Set<String>> access = authMap.get(bearerToken);
 		
-		if (access == null) {
-			access = new Pair<String, Set<String>>(username, new HashSet<String>());
-			authMap.put(bearerToken, access);
+		// Because mutating what is already in the map will break it.
+		IPair<String, Set<String>> newAccess = new Pair<String, Set<String>>(username, scopes);
+		
+		if (access != null) {
+			newAccess.getSecond().addAll(access.getSecond());
 		}
 		
-		access.getSecond().addAll(scopes);
+		authMap.put(bearerToken, newAccess);
+		db.commit();
 	}
 	
 	@Override
 	public synchronized void removeScopes(String bearerToken,
 			Set<String> scopes) {
 		IPair<String, Set<String>> access = authMap.get(bearerToken);
-		
 		if (access != null) {
-			access.getSecond().removeAll(scopes);
+			// Because mutating what is already in the map will break it.
+			IPair<String, Set<String>> newAccess = new Pair<String, Set<String>>(access.getFirst(), new HashSet<>(access.getSecond()));
+			newAccess.getSecond().removeAll(scopes);
+
+			authMap.put(bearerToken, newAccess);
+			db.commit();
 		}
 	}
 	
