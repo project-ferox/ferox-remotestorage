@@ -37,7 +37,7 @@ AuthDialog(alert) ::= <%
   			</div>
   			
   			<div class="modal-footer">
-    			<a href="registrations/clear">Clear Users</a> | <a href="dialog">Register</a>
+    			<a href="registrations/clear">Clear Users</a> | <a href="registrations">Register</a>
   			</div>
 		</div>
 	</body>

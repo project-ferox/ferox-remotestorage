@@ -37,7 +37,7 @@ RegistrationPage(alert) ::= <<
   			</div>
   			
   			<div class="modal-footer">
-  				<a href="registrations/clear">Clear Users</a> | <a href="registrations">Login</a>
+  				<a href="registrations/clear">Clear Users</a> | <a href="dialog">Login</a>
   			</div>
 		</div>
 	</body>
