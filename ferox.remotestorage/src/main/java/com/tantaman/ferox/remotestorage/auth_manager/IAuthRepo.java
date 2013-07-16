@@ -1,4 +1,4 @@
-package com.tantaman.ferox.remotestorage.auth_management;
+package com.tantaman.ferox.remotestorage.auth_manager;
 
 import java.util.Set;
 

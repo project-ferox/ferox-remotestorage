@@ -16,10 +16,10 @@ import com.tantaman.ferox.remotestorage.auth_dummy.auth.UserRepo;
 import com.tantaman.lo4j.Lo;
 
 // TODO: we'll have to do body parsing here... / request decoding.
-public class LoginAuthenticationHandler extends RouteHandlerAdapter {
+public class AuthenticationHandler extends RouteHandlerAdapter {
 	private final UserRepo userRepo;
 	
-	public LoginAuthenticationHandler(UserRepo userRepo) {
+	public AuthenticationHandler(UserRepo userRepo) {
 		this.userRepo = userRepo;
 	}
 	

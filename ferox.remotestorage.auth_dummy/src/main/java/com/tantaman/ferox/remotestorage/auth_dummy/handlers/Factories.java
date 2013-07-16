@@ -20,7 +20,7 @@ public class Factories {
 			
 			@Override
 			public IRouteHandler create() {
-				return new LoginAuthenticationHandler(userRepo);
+				return new AuthenticationHandler(userRepo);
 			}
 		};
 	}

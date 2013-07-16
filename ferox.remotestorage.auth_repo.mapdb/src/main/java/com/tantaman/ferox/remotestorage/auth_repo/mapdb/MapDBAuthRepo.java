@@ -11,7 +11,7 @@ import org.mapdb.DBMaker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.tantaman.ferox.remotestorage.auth_management.IAuthRepo;
+import com.tantaman.ferox.remotestorage.auth_manager.IAuthRepo;
 import com.tantaman.ferox.util.IPair;
 import com.tantaman.ferox.util.Pair;
 import com.tantaman.lo4j.Lo;

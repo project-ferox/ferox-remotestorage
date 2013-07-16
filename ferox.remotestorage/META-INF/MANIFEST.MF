@@ -16,5 +16,5 @@ Import-Package: com.tantaman.ferox.api.request_response,
  org.slf4j;provider=paxlogging
 Service-Component: OSGI-INF/*
 Export-Package: com.tantaman.ferox.remotestorage,
- com.tantaman.ferox.remotestorage.auth_management,
+ com.tantaman.ferox.remotestorage.auth_manager,
  com.tantaman.ferox.remotestorage.resource

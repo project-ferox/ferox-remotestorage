@@ -16,7 +16,7 @@ import com.tantaman.ferox.api.request_response.IHttpRequest;
 import com.tantaman.ferox.api.request_response.IRequestChainer;
 import com.tantaman.ferox.api.request_response.IResponse;
 import com.tantaman.ferox.api.router.IRouteHandler;
-import com.tantaman.ferox.remotestorage.auth_management.AuthorizationManager;
+import com.tantaman.ferox.remotestorage.auth_manager.AuthorizationManager;
 import com.tantaman.ferox.remotestorage.resource.IResourceIdentifier;
 import com.tantaman.ferox.util.IPair;
 import com.tantaman.ferox.util.Pair;

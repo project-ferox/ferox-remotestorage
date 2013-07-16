@@ -1,4 +1,4 @@
-package com.tantaman.ferox.remotestorage.auth_management;
+package com.tantaman.ferox.remotestorage.auth_manager;
 
 import java.util.Map;
 
@@ -10,7 +10,7 @@ import com.tantaman.ferox.api.router.IRouteHandlerFactory;
 import com.tantaman.ferox.api.router.IRouteInitializer;
 import com.tantaman.ferox.api.router.IRouterBuilder;
 import com.tantaman.ferox.remotestorage.ConfigKeys;
-import com.tantaman.ferox.remotestorage.auth_management.route_handlers.RouteHandlers;
+import com.tantaman.ferox.remotestorage.auth_manager.route_handlers.RouteHandlers;
 
 public class AuthManagerRouteInitializer implements IRouteInitializer {
 	private volatile String authManagerRoot;
