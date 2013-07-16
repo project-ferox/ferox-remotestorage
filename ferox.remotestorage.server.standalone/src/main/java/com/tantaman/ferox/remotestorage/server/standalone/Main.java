@@ -17,6 +17,6 @@ public class Main {
 		// where a user is putting to RS it won't be applicable.
 //		server.use(ChannelMiddleware.BODY_PARSER);
 		log.debug("RemoteStorage listening on 443");
-		server.listen(443, false);
+		server.listen(443, true);
 	}
 }
