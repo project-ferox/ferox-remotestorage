@@ -1,0 +1,10 @@
+<?xml version='1.1'?>
+
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="ferox.remotestorage.auth_manager">
+  <implementation class="com.tantaman.ferox.remotestorage.auth_manager.AuthorizationManager"/>
+  <reference bind="setScopeRepository" unbind="unsetScopeRepository" cardinality="0..1" policy="dynamic"
+   	interface="com.tantaman.ferox.remotestorage.auth_manager.IAuthRepo" name="authRepo"/>
+  <service>
+    <provide interface="com.tantaman.ferox.remotestorage.auth_manager.IAuthManager"/>
+  </service>
+</scr:component>

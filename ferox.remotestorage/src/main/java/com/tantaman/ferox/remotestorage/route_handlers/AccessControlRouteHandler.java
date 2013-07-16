@@ -16,7 +16,7 @@ import com.tantaman.ferox.api.request_response.IHttpRequest;
 import com.tantaman.ferox.api.request_response.IRequestChainer;
 import com.tantaman.ferox.api.request_response.IResponse;
 import com.tantaman.ferox.api.router.IRouteHandler;
-import com.tantaman.ferox.remotestorage.auth_manager.AuthorizationManager;
+import com.tantaman.ferox.remotestorage.auth_manager.IAuthManager;
 import com.tantaman.ferox.remotestorage.resource.IResourceIdentifier;
 import com.tantaman.ferox.util.IPair;
 import com.tantaman.ferox.util.Pair;
@@ -25,13 +25,13 @@ import com.tantaman.lo4j.Lo;
 public class AccessControlRouteHandler implements IRouteHandler {
 	private static final Logger log = LoggerFactory.getLogger(AccessControlRouteHandler.class);
 	
-	private final AuthorizationManager authRepo;
+	private final IAuthManager authManager;
 	
 	private volatile boolean authorized = false;
 	private final List<IPair<IRequestChainer, IHttpReception>> receptionQueue = new LinkedList<>();
 	
-	public AccessControlRouteHandler(AuthorizationManager authRepo) {
-		this.authRepo = authRepo;
+	public AccessControlRouteHandler(IAuthManager authManager) {
+		this.authManager = authManager;
 	}
 	
 	@Override
@@ -44,7 +44,7 @@ public class AccessControlRouteHandler implements IRouteHandler {
 			receptionQueue.add(new Pair<IRequestChainer, IHttpReception>(next, request));
 		}
 		
-		authRepo.isAuthorized(resourceIdentifier,
+		authManager.isAuthorized(resourceIdentifier,
 				request.getHeaders().get(HttpHeaders.Names.AUTHORIZATION),
 				request.getMethod(),
 				new Lo.VFn2<Boolean, Throwable>() {

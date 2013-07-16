@@ -19,7 +19,7 @@ import com.tantaman.lo4j.Lo;
  * @author tantaman
  *
  */
-public class AuthorizationManager {
+public class AuthorizationManager implements IAuthManager {
 	private static final Logger log = LoggerFactory.getLogger(AuthorizationManager.class);
 	private static final ExecutorService AUTH_LOOKUP = Executors.newFixedThreadPool(1);
 	private volatile IAuthRepo scopeRepository; // TODO: may need to be AtomicReference?  Could it be getting set and unset at the same time and require a CAS? does it matter?
@@ -42,7 +42,6 @@ public class AuthorizationManager {
 			scopeRepository.revokeAccess(auth.getAccessToken());
 	}
 	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void setScopeRepository(IAuthRepo scopeRepository) {
 		log.debug("Scope repository set " + this);
 		this.scopeRepository = scopeRepository;

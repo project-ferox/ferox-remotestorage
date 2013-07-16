@@ -6,8 +6,7 @@ import com.tantaman.ferox.api.router.IRouteHandlerFactory;
 import com.tantaman.ferox.api.router.IRouteInitializer;
 import com.tantaman.ferox.api.router.IRouterBuilder;
 import com.tantaman.ferox.remotestorage.auth_manager.AuthManagerRouteInitializer;
-import com.tantaman.ferox.remotestorage.auth_manager.AuthorizationManager;
-import com.tantaman.ferox.remotestorage.auth_manager.IAuthRepo;
+import com.tantaman.ferox.remotestorage.auth_manager.IAuthManager;
 import com.tantaman.ferox.remotestorage.resource.IResourceProvider;
 import com.tantaman.ferox.remotestorage.route_handlers.HandlerFactories;
 import com.tantaman.ferox.remotestorage.webfinger.WebfingerMiddlewareInitializer;
@@ -18,12 +17,11 @@ public class RouteInitializer implements IRouteInitializer {
 	// get set up for statically bound services.
 	private String storageRootUri;
 	private IResourceProvider resourceProvider;
+	private IAuthManager authManager;
 	private final AuthManagerRouteInitializer authManagerInit;
-	private final AuthorizationManager authManager;
 	private final WebfingerMiddlewareInitializer webfingerMiddlewareInit;
 	
 	public RouteInitializer() {
-		authManager = new AuthorizationManager();
 		authManagerInit = new AuthManagerRouteInitializer();
 		webfingerMiddlewareInit = new WebfingerMiddlewareInitializer();
 	}
@@ -32,12 +30,8 @@ public class RouteInitializer implements IRouteInitializer {
 		this.resourceProvider = resourceProvider;
 	}
 	
-	void setScopeRepository(IAuthRepo scopeRepo) {
-		authManager.setScopeRepository(scopeRepo);
-	}
-	
-	void unsetScopeRepository() {
-		authManager.unsetScopeRepository();
+	void setAuthManager(IAuthManager authManager) {
+		this.authManager = authManager;
 	}
 	
 	public void activate(Map<String, String> configuration) {
