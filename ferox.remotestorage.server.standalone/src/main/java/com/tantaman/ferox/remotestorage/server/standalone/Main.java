@@ -16,7 +16,7 @@ public class Main {
 		// We don't want to ever use the body parser since in 99% of the cases 
 		// where a user is putting to RS it won't be applicable.
 //		server.use(ChannelMiddleware.BODY_PARSER);
-		log.debug("RemoteStorage listening on 8080");
-		server.listen(8080, false);
+		log.debug("RemoteStorage listening on 443");
+		server.listen(443, false);
 	}
 }
