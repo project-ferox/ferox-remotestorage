@@ -5,7 +5,6 @@ import java.util.Map;
 import com.tantaman.ferox.api.router.IRouteHandlerFactory;
 import com.tantaman.ferox.api.router.IRouteInitializer;
 import com.tantaman.ferox.api.router.IRouterBuilder;
-import com.tantaman.ferox.remotestorage.auth_manager.AuthManagerRouteInitializer;
 import com.tantaman.ferox.remotestorage.auth_manager.IAuthManager;
 import com.tantaman.ferox.remotestorage.resource.IResourceProvider;
 import com.tantaman.ferox.remotestorage.route_handlers.HandlerFactories;
@@ -18,11 +17,9 @@ public class RouteInitializer implements IRouteInitializer {
 	private String storageRootUri;
 	private IResourceProvider resourceProvider;
 	private IAuthManager authManager;
-	private final AuthManagerRouteInitializer authManagerInit;
 	private final WebfingerMiddlewareInitializer webfingerMiddlewareInit;
 	
 	public RouteInitializer() {
-		authManagerInit = new AuthManagerRouteInitializer();
 		webfingerMiddlewareInit = new WebfingerMiddlewareInitializer();
 	}
 	
@@ -37,7 +34,6 @@ public class RouteInitializer implements IRouteInitializer {
 	public void activate(Map<String, String> configuration) {
 		// configuration contains information such as the root of the routes.
 		storageRootUri = configuration.get(ConfigKeys.STORAGE_ROOT_URI);
-		authManagerInit.activate(configuration);
 		webfingerMiddlewareInit.activate(configuration);
 	}
 	
@@ -60,7 +56,6 @@ public class RouteInitializer implements IRouteInitializer {
 		routerBuilder.delete(route, accessControl);
 		routerBuilder.delete(route, HandlerFactories.DELETE);
 		
-		authManagerInit.addRoutes(routerBuilder);
 		webfingerMiddlewareInit.addRoutes(routerBuilder);
 	}
 

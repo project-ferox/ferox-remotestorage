@@ -1,4 +1,4 @@
-package com.tantaman.ferox.remotestorage.auth_manager;
+package com.tantaman.ferox.remotestorage.auth_manager.exposed.rest;
 
 import java.util.Map;
 
@@ -9,17 +9,22 @@ import com.tantaman.ferox.api.router.IRouteHandler;
 import com.tantaman.ferox.api.router.IRouteHandlerFactory;
 import com.tantaman.ferox.api.router.IRouteInitializer;
 import com.tantaman.ferox.api.router.IRouterBuilder;
-import com.tantaman.ferox.remotestorage.ConfigKeys;
-import com.tantaman.ferox.remotestorage.auth_manager.route_handlers.RouteHandlers;
+import com.tantaman.ferox.remotestorage.auth_manager.IAuthManager;
 
 public class AuthManagerRouteInitializer implements IRouteInitializer {
-	private volatile String authManagerRoot;
-	private volatile String authManagerPassword;
+	private String authManagerRoot;
+	private String authManagerPassword;
 	private static final Logger log = LoggerFactory.getLogger(AuthManagerRouteInitializer.class);
+	private IAuthManager authManager;
 	
 	public void activate(Map<String, String> configuration) {
+		log.debug("Activated");
 		authManagerRoot = configuration.get(ConfigKeys.AUTH_MANAGER_URI);
 		authManagerPassword = configuration.get(ConfigKeys.AUTH_MANAGER_PASSWORD);
+	}
+	
+	void setAuthManager(IAuthManager authManager) {
+		this.authManager = authManager;
 	}
 	
 	@Override
@@ -42,7 +47,7 @@ public class AuthManagerRouteInitializer implements IRouteInitializer {
 		routerBuilder.put(route, new IRouteHandlerFactory() {
 			@Override
 			public IRouteHandler create() {
-				return new RouteHandlers.AddAuthorizationHandler();
+				return new RouteHandlers.AddAuthorization(authManager);
 			}
 		});
 		
@@ -50,7 +55,7 @@ public class AuthManagerRouteInitializer implements IRouteInitializer {
 		routerBuilder.delete(route, new IRouteHandlerFactory() {
 			@Override
 			public IRouteHandler create() {
-				return new RouteHandlers.RemoveAuthorizationHandler();
+				return new RouteHandlers.RemoveAuthorization(authManager);
 			}
 		});
 	}
