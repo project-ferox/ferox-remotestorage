@@ -26,6 +26,40 @@ public class WebfingerUpdater extends RouteHandlerAdapter {
 		
 		List<Map<String,Object>> links = entry.getLinks();
 		
+		Map<String, Object> link = version00(entry); //version01
+		
+		links.add(link);
+		
+		next.lastContent(content);
+	}
+	
+	private Map<String, Object> version00(IDynamicWebfingerEntry entry) {
+		/*
+		 *  {
+      href: <storage_root>,
+      rel: "remotestorage",
+      type: <storage_api>,
+      properties: {
+        'auth-method': "http://tools.ietf.org/html/rfc6749#section-4.2",
+        'auth-endpoint': <auth_endpoint>
+      }
+    }
+		 */
+		Map<String, Object> link = new LinkedHashMap<>();
+		
+		link.put("href", getUserScopedStorageRoot(entry.getSubject()));
+		link.put("rel", "remotestorage");
+		link.put("type", "draft-dejong-remotestorage-00");
+		
+		Map<String, String> properties = new LinkedHashMap<>();
+		properties.put("auth-method", "http://tools.ietf.org/html/rfc6749#section-4.2");
+		properties.put("auth-endpoint", authDialog);
+		link.put("properties", properties);
+		
+		return link;
+	}
+	
+	private Map<String, Object> version01(IDynamicWebfingerEntry entry) {
 		Map<String, Object> link = new LinkedHashMap<>();
 		
 		link.put("href", getUserScopedStorageRoot(entry.getSubject()));
@@ -36,9 +70,7 @@ public class WebfingerUpdater extends RouteHandlerAdapter {
 		properties.put("http://tools.ietf.org/html/rfc6749#section-4.2", authDialog);
 		link.put("properties", properties);
 		
-		links.add(link);
-		
-		next.lastContent(content);
+		return link;
 	}
 	
 	private String getUserScopedStorageRoot(String subject) {

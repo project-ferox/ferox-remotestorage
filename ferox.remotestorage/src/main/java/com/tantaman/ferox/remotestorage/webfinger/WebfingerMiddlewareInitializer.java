@@ -18,8 +18,8 @@ public class WebfingerMiddlewareInitializer implements IRouteInitializer {
 	
 	public void activate(Map<String, String> configuration) {
 		log.debug("Activated webfinger mw initializer");
-		storageRootUri = configuration.get(ConfigKeys.STORAGE_ROOT_URI);
-		authDialog = configuration.get(ConfigKeys.AUTH_DIALOG_URI);
+		storageRootUri = configuration.get(ConfigKeys.PROTOCOL) + "://" + configuration.get(ConfigKeys.HOSTNAME) + configuration.get(ConfigKeys.STORAGE_ROOT_URI);
+		authDialog = configuration.get(ConfigKeys.PROTOCOL) + "://" + configuration.get(ConfigKeys.HOSTNAME) + configuration.get(ConfigKeys.AUTH_DIALOG_URI);
 	}
 	
 	@Override
