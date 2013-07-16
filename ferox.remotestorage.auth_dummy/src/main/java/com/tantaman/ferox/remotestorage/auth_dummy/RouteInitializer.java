@@ -6,6 +6,7 @@ import com.tantaman.ferox.api.router.IRouteInitializer;
 import com.tantaman.ferox.api.router.IRouterBuilder;
 import com.tantaman.ferox.remotestorage.auth_dummy.auth.UserRepo;
 import com.tantaman.ferox.remotestorage.auth_dummy.handlers.Factories;
+import com.tantaman.ferox.remotestorage.auth_manager.IAuthManager;
 import com.tantaman.ferox.route_middelware.RouteMiddleware;
 
 public class RouteInitializer implements IRouteInitializer {
@@ -13,6 +14,7 @@ public class RouteInitializer implements IRouteInitializer {
 	private String staticFsRoot;
 	private String templateFsRoot;
 	private final UserRepo userRepo;
+	private IAuthManager authManager;
 	
 	public RouteInitializer() {
 		userRepo = new UserRepo();
@@ -23,6 +25,10 @@ public class RouteInitializer implements IRouteInitializer {
 		staticFsRoot = configuration.get(ConfigKeys.STATIC_FS_ROOT);
 		templateFsRoot = configuration.get(ConfigKeys.TEMPLATE_FS_ROOT);
 		userRepo.activate(configuration);
+	}
+	
+	void setAuthManager(IAuthManager authManager) {
+		this.authManager = authManager;
 	}
 	
 	public void deactivate() {
@@ -37,7 +43,7 @@ public class RouteInitializer implements IRouteInitializer {
 		routerBuilder.get(uriRoot + "/registrations", Factories.registrationPage(templateFsRoot));
 		
 		routerBuilder.post(uriRoot + "/dialog", RouteMiddleware.bodyParser());
-		routerBuilder.post(uriRoot + "/dialog", Factories.authenticate(userRepo));
+		routerBuilder.post(uriRoot + "/dialog", Factories.authenticate(userRepo, authManager));
 		
 		routerBuilder.post(uriRoot + "/registrations", RouteMiddleware.bodyParser());
 		routerBuilder.post(uriRoot + "/registrations", Factories.createUser(userRepo));

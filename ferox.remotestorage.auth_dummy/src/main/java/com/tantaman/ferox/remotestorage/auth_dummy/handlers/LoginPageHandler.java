@@ -2,8 +2,6 @@ package com.tantaman.ferox.remotestorage.auth_dummy.handlers;
 
 import io.netty.handler.codec.http.HttpResponseStatus;
 
-import java.util.List;
-
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 import org.stringtemplate.v4.STGroupDir;
@@ -17,7 +15,7 @@ public class LoginPageHandler extends RouteHandlerAdapter {
 	private final STGroup templateGroup;
 	
 	public LoginPageHandler(String templateRoot) {
-		templateGroup = new STGroupDir(templateRoot, '{', '}');
+		templateGroup = new STGroupDir(templateRoot, "UTF-8", '{', '}');
 	}
 	
 	@Override
@@ -25,13 +23,8 @@ public class LoginPageHandler extends RouteHandlerAdapter {
 			IRequestChainer next) {
 		ST tpl = templateGroup.getInstanceOf("AuthDialog");
 		
-		// TODO: clean up this api.
-		List<String> alerts = content.getQueryParam("alert");
-		if (alerts != null && alerts.size() > 0) {
-			tpl.add("alert", alerts.get(0));
-		} else {
-			tpl.add("alert", "");
-		}
+		String alert = content.getQueryParam("alert");
+		tpl.add("alert", alert);
 		
 		response.send(tpl.render(), HttpResponseStatus.OK);
 		

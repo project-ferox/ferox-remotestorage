@@ -19,6 +19,7 @@ import com.tantaman.ferox.remotestorage.auth_dummy.ConfigKeys;
 public class UserRepo {
 	private volatile DB db;
 	private volatile BTreeMap<String, byte[]> userMap;
+	private static final byte [] worthless = new byte [] {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
 	
 	public UserRepo() {
 	}
@@ -35,7 +36,7 @@ public class UserRepo {
 	}
 	
 	private static byte [] hashPassword(String password) throws InvalidKeySpecException, NoSuchAlgorithmException {
-		KeySpec spec = new PBEKeySpec(password.toCharArray(), null, 65536, 128);
+		KeySpec spec = new PBEKeySpec(password.toCharArray(), worthless, 65536, 128);
 		SecretKeyFactory f = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
 		return f.generateSecret(spec).getEncoded();
 	}

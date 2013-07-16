@@ -12,17 +12,28 @@ import com.tantaman.ferox.remotestorage.auth_manager.IAuthManager;
 
 public class RouteHandlers {
 	public static class AddAuthorization extends RouteHandlerAdapter {
+		private final IAuthManager authManager;
+		
 		public AddAuthorization(IAuthManager authManager) {
+			this.authManager = authManager;
 		}
 		
 		@Override
 		public void lastContent(IHttpContent content, IResponse response,
 				IRequestChainer next) {
+			List<String> scopes = content.getQueryParams("scopes");
+			String user = content.getQueryParam("username");
+			String password = content.getQueryParam("token");
+			
+			
 		}
 	}
 	
 	public static class RemoveAuthorization extends RouteHandlerAdapter {
+		private final IAuthManager authManager;
+		
 		public RemoveAuthorization(IAuthManager authManager) {
+			this.authManager = authManager;
 		}
 		
 		@Override
@@ -43,8 +54,7 @@ public class RouteHandlers {
 		public void lastContent(IHttpContent content, IResponse response,
 				IRequestChainer next) {
 			try {
-				List<String> passwords = content.getQueryParam("password");
-				String password = passwords.size() > 0 ? passwords.get(0) : null;
+				String password = content.getQueryParam("password");
 				
 				if (expectedPassword.equals(password))
 					next.lastContent(content);
