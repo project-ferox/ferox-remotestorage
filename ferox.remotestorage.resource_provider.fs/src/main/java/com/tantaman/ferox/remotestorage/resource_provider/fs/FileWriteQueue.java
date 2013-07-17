@@ -18,8 +18,7 @@ public class FileWriteQueue implements IResourceOutputQueue {
 	private final String absPath;
 	private volatile int cursor = 0;
 	
-	public FileWriteQueue(String path, ExecutorService executor) throws IOException {
-		File f = new File(path);
+	public FileWriteQueue(File f, ExecutorService executor) throws IOException {
 		absPath = f.getAbsolutePath();
 		
 		Path p = Paths.get(absPath);
@@ -37,7 +36,7 @@ public class FileWriteQueue implements IResourceOutputQueue {
 	}
 
 	@Override
-	public void close() {
-		
+	public void close() throws IOException {
+		fileChannel.close();
 	}
 }

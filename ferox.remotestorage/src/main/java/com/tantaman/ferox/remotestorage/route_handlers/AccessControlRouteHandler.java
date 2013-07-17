@@ -52,7 +52,7 @@ public class AccessControlRouteHandler implements IRouteHandler {
 					public void f(Boolean authorized, Throwable err) {
 						if (authorized != null && authorized) {
 							AccessControlRouteHandler.this.authorized = true;
-							processReceptionQueue(next);
+							processReceptionQueue();
 						} else {
 							log.debug("Authorization failed");
 							response.send("{\"status\": \"unauthorized\"}", "application/json", HttpResponseStatus.UNAUTHORIZED)
@@ -66,7 +66,7 @@ public class AccessControlRouteHandler implements IRouteHandler {
 				});
 	}
 	
-	private void processReceptionQueue(IRequestChainer chainer) {
+	private void processReceptionQueue() {
 		List<IPair<IRequestChainer, IHttpReception>> drainedQueue;
 		synchronized (receptionQueue) {
 			drainedQueue = new LinkedList<>(receptionQueue);
@@ -76,7 +76,9 @@ public class AccessControlRouteHandler implements IRouteHandler {
 		for (IPair<IRequestChainer, IHttpReception> reception : drainedQueue) {
 			if (reception.getSecond() instanceof IHttpRequest) {
 				reception.getFirst().request((IHttpRequest)reception.getSecond());
-			} else if (reception.getSecond() instanceof IHttpContent) {
+			}
+			
+			if (reception.getSecond() instanceof IHttpContent) {
 				IHttpContent content = (IHttpContent)reception.getSecond();
 				
 				if (content.isLast()) {

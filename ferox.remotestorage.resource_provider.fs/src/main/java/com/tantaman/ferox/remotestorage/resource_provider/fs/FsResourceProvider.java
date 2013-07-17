@@ -2,6 +2,7 @@ package com.tantaman.ferox.remotestorage.resource_provider.fs;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -42,25 +43,79 @@ public class FsResourceProvider implements IResourceProvider {
 	}
 	
 	@Override
-	public void openForWrite(IResourceIdentifier path,
-			VFn2<IResourceOutputQueue, Throwable> callback) {
-		
+	public void openForWrite(final IResourceIdentifier path,
+			final VFn2<IResourceOutputQueue, Throwable> callback) throws IllegalStateException {
+		if (path.isDir())
+			throw new IllegalStateException("Can't write to a directory");
+		Workers.FS_POOL.execute(new Runnable() {
+			@Override
+			public void run() {
+				retrieveForWrite(path, callback);
+			}
+		});
 	}
 	
+	private void retrieveForWrite(IResourceIdentifier identifier, VFn2<IResourceOutputQueue, Throwable> callback) {
+		String uri = identifier.getUserRelativerUri();
+		
+		String prefix = fsRoot + "/" + identifier.getUser();
+		String path = prefix + "/" + uri.replace("..", "");
+		
+		prefix = new File(prefix).getAbsolutePath();
+		try {
+			File f = new File(path);
+			String fullPath = f.getAbsolutePath();
+			if (!fullPath.startsWith(prefix)) {
+				callback.f(null, new IllegalAccessException("Denied path"));
+				return;
+			}
+			
+			if (f.isDirectory()) {
+				callback.f(null, new IllegalAccessException("Can't write to a directory"));
+				return;
+			}
+			
+			if (!f.exists()) {
+				File parent = new File(f.getParent());
+				if (!parent.exists()) {
+					boolean made = ensureDirectory(parent);
+					if (!made) {
+						callback.f(null, new IOException("Failed creating required directories"));
+						return;
+					}
+				}
+			}
+			
+			callback.f(new FileWriteQueue(f, Workers.FS_POOL), null);
+		} catch (IOException e) {
+			callback.f(null, e);
+		}
+	}
+	
+	private boolean ensureDirectory(File f) {
+		boolean made = f.mkdirs();
+		if (!made)
+			log.error("Unable to make the requested directories. " + f.getParent() + " " + f.getAbsolutePath());
+		return made;
+	}
+	
+	// TODO: IDocument should just have streams for read and write
 	private void retrieveResource(IResourceIdentifier identifier, Lo.VFn2<IResource, Throwable> callback) {
 		String uri = identifier.getUserRelativerUri();
 		
 		String prefix = fsRoot + "/" + identifier.getUser();
 		String path = prefix + "/" + uri.replace("..", "");
 		
+		prefix = new File(prefix).getAbsolutePath();
 		if (identifier.isDir()) {
 			// do the directory listing
 			// TODO: spec has some weird stuff about empty folders
 			// (e.g., saying they don't exist and not listing them)
 			File f = new File(path);
-			if (!f.getAbsolutePath().startsWith(new File(prefix).getAbsolutePath())) {
+			if (!f.getAbsolutePath().startsWith(prefix)) {
 				log.debug(prefix + " " + f.getAbsolutePath());
 				callback.f(null, new IllegalAccessException("Denied path"));
+				return;
 			}
 			
 			if (f.exists()) {
@@ -77,7 +132,7 @@ public class FsResourceProvider implements IResourceProvider {
 			}
 		} else {
 			File f = new File(path);
-			if (f.exists()) {
+			if (f.exists() && f.getAbsolutePath().startsWith(prefix)) {
 				callback.f(new Document(f), null);
 			} else {
 				callback.f(null, new FileNotFoundException("File not found for: " + path));
