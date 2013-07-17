@@ -5,31 +5,32 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.RandomAccessFile;
 
 import com.tantaman.ferox.remotestorage.resource.IDocumentResource;
+import com.tantaman.ferox.remotestorage.resource_provider.fs.file_locking.FileLocks;
 
 public class Document implements IDocumentResource {
 	private InputStream stream = null;
-	private File file;
-	private RandomAccessFile randomAccessFile;
+	private final File file;
+	private final String absPath;
 	
 	public Document(File file) {
 		this.file = file;
+		absPath = file.getAbsolutePath();
 	}
 	
 	@Override
 	public InputStream getStream() throws FileNotFoundException {
-		if (stream == null) 
+		if (stream == null) {
 			stream = new FileInputStream(file);
+		}
 		return stream;
 	}
 	
 	public void close() throws IOException {
-		if (stream != null)
+		if (stream != null) {
 			stream.close();
-		if (randomAccessFile != null)
-			randomAccessFile.close();
+		}
 	}
 
 	@Override
@@ -39,9 +40,6 @@ public class Document implements IDocumentResource {
 
 	@Override
 	public long length() throws FileNotFoundException {
-		if (randomAccessFile == null) {
-			randomAccessFile = new RandomAccessFile(file, "r");
-		}
 		return file.length();
 	}
 
@@ -49,7 +47,7 @@ public class Document implements IDocumentResource {
 	public String getContentType() {
 		// TODO: fill this in correctly.
 		// this would involve looking up the corresponding md entry...
-		return "application/json";
+		return "text/plain";
 	}
 
 	@Override

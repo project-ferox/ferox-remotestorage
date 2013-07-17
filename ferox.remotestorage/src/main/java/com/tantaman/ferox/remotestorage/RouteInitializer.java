@@ -70,7 +70,7 @@ public class RouteInitializer implements IRouteInitializer {
 		
 		routerBuilder.put(route, identifierBuilderFactory);		
 		routerBuilder.put(route, accessControl);
-		routerBuilder.put(route, HandlerFactories.UPSERT);
+		routerBuilder.put(route, HandlerFactories.upsert(resourceProvider));
 		
 		routerBuilder.delete(route, identifierBuilderFactory);		
 		routerBuilder.delete(route, accessControl);

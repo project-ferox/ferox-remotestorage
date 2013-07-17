@@ -4,5 +4,5 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Workers {
-	public static final ExecutorService FS_EVENT_QUEUE = Executors.newFixedThreadPool(1);
+	public static final ExecutorService FS_POOL = Executors.newFixedThreadPool(4);
 }

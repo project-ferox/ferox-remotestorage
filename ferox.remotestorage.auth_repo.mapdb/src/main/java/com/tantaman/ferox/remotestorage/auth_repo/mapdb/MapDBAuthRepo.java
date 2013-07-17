@@ -14,13 +14,12 @@ import org.slf4j.LoggerFactory;
 import com.tantaman.ferox.remotestorage.auth_manager.IAuthRepo;
 import com.tantaman.ferox.util.IPair;
 import com.tantaman.ferox.util.Pair;
-import com.tantaman.lo4j.Lo;
 
 public class MapDBAuthRepo implements IAuthRepo {
 	private static final Logger log = LoggerFactory.getLogger(MapDBAuthRepo.class);
-	private volatile DB db;
+	private DB db;
 	// Map from bearerToken -> (username, (scopes...))
-	private volatile BTreeMap<String, IPair<String, Set<String>>> authMap;
+	private BTreeMap<String, IPair<String, Set<String>>> authMap;
 	
 	private static interface CacheTypes {
 		public static final String SOFT = "soft";
@@ -64,22 +63,25 @@ public class MapDBAuthRepo implements IAuthRepo {
 			break;
 		}
 		
-		db = maker.make();
-		authMap = db.getTreeMap(collectionName);
-		
-//		authMap.put("token", new Pair<String, Set<String>>("matt", (Set)Lo.createSet("root:rw")));
-//		db.commit();
+		DB db = maker.make();
+		BTreeMap<String, IPair<String, Set<String>>> authMap = db.getTreeMap(collectionName);
+		// this is OK since none of the other methods on this class will be exposed
+		// to clients until this method completes.
+		synchronized (this) {
+			this.db = db;
+			this.authMap = authMap;
+		}
 		
 		log.debug("Database made: " + db);
 	}
 	
-	public void deactivate() {
+	public synchronized void deactivate() {
 		log.debug("Deactivating the auth repo");
 		db.close();
 	}
 	
 	@Override
-	public IPair<String, Set<String>> getScopes(String bearerToken) {
+	public synchronized IPair<String, Set<String>> getScopes(String bearerToken) {
 		return authMap.get(bearerToken);
 	}
 
@@ -114,7 +116,7 @@ public class MapDBAuthRepo implements IAuthRepo {
 	}
 	
 	@Override
-	public void revokeAccess(String bearerToken) {
+	public synchronized void revokeAccess(String bearerToken) {
 		authMap.remove(bearerToken);
 	}
 }

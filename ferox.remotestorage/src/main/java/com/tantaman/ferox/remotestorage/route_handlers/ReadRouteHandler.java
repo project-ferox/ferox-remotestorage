@@ -34,11 +34,12 @@ import com.tantaman.ferox.remotestorage.resource.IResourceProvider;
 import com.tantaman.lo4j.Lo;
 
 public class ReadRouteHandler extends RouteHandlerAdapter {
-	private final IResourceProvider resourceProvider;
 	public static final String HTTP_DATE_FORMAT = "EEE, dd MMM yyyy HH:mm:ss zzz";
     public static final String HTTP_DATE_GMT_TIMEZONE = "GMT";
     public static final int HTTP_CACHE_SECONDS = 60;
     private static final Logger log = LoggerFactory.getLogger(ReadRouteHandler.class);
+    
+    private final IResourceProvider resourceProvider;
 	
 	public ReadRouteHandler(IResourceProvider resourceProvider) {
 		this.resourceProvider = resourceProvider;

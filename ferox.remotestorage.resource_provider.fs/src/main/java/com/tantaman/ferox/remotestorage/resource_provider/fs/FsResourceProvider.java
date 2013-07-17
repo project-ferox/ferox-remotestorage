@@ -12,8 +12,10 @@ import org.slf4j.LoggerFactory;
 import com.tantaman.ferox.remotestorage.ConfigKeys;
 import com.tantaman.ferox.remotestorage.resource.IResource;
 import com.tantaman.ferox.remotestorage.resource.IResourceIdentifier;
+import com.tantaman.ferox.remotestorage.resource.IResourceOutputQueue;
 import com.tantaman.ferox.remotestorage.resource.IResourceProvider;
 import com.tantaman.lo4j.Lo;
+import com.tantaman.lo4j.Lo.VFn2;
 
 public class FsResourceProvider implements IResourceProvider {
 	private static final Logger log = LoggerFactory.getLogger(FsResourceProvider.class);
@@ -31,12 +33,18 @@ public class FsResourceProvider implements IResourceProvider {
 			throw new IllegalStateException("Illegal module");
 		}
 		
-		Workers.FS_EVENT_QUEUE.execute(new Runnable() {
+		Workers.FS_POOL.execute(new Runnable() {
 			@Override
 			public void run() {
 				retrieveResource(identifier, callback);
 			}
 		});
+	}
+	
+	@Override
+	public void openForWrite(IResourceIdentifier path,
+			VFn2<IResourceOutputQueue, Throwable> callback) {
+		
 	}
 	
 	private void retrieveResource(IResourceIdentifier identifier, Lo.VFn2<IResource, Throwable> callback) {

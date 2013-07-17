@@ -4,12 +4,26 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.tantaman.ferox.api.request_response.IHttpContent;
+import com.tantaman.ferox.api.request_response.IHttpRequest;
 import com.tantaman.ferox.api.request_response.IRequestChainer;
 import com.tantaman.ferox.api.request_response.IResponse;
 import com.tantaman.ferox.api.router.RouteHandlerAdapter;
+import com.tantaman.ferox.remotestorage.resource.IResourceProvider;
 
 public class UpsertRouteHandler extends RouteHandlerAdapter {
+	private final IResourceProvider resourceProvider;
+	
 	private static final Logger log = LoggerFactory.getLogger(UpsertRouteHandler.class);
+	
+	public UpsertRouteHandler(IResourceProvider resourceProvider) {
+		this.resourceProvider = resourceProvider;
+	}
+	
+	@Override
+	public void request(IHttpRequest request, IResponse response,
+			IRequestChainer next) {
+		
+	}
 	
 	@Override
 	public void content(IHttpContent content, IResponse response,
@@ -23,6 +37,8 @@ public class UpsertRouteHandler extends RouteHandlerAdapter {
 		// X-Rs-Subtype: file(s)
 		// requests of this type will be "put" to a directory.
 		// documents will be created for each file contained in the request.
+		
+		//content.getContent();
 	}
 	
 	@Override
