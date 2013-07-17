@@ -73,18 +73,26 @@ public class AccessControlRouteHandler implements IRouteHandler {
 			receptionQueue.clear();
 		}
 		
-		for (IPair<IRequestChainer, IHttpReception> reception : drainedQueue) {
-			if (reception.getSecond() instanceof IHttpRequest) {
-				reception.getFirst().request((IHttpRequest)reception.getSecond());
-			}
-			
-			if (reception.getSecond() instanceof IHttpContent) {
-				IHttpContent content = (IHttpContent)reception.getSecond();
+		try {
+			for (IPair<IRequestChainer, IHttpReception> reception : drainedQueue) {
+				if (reception.getSecond() instanceof IHttpRequest) {
+					reception.getFirst().request((IHttpRequest)reception.getSecond());
+				}
 				
-				if (content.isLast()) {
-					reception.getFirst().lastContent(content);
-				} else {
-					reception.getFirst().content(content);
+				if (reception.getSecond() instanceof IHttpContent) {
+					IHttpContent content = (IHttpContent)reception.getSecond();
+					
+					if (content.isLast()) {
+						reception.getFirst().lastContent(content);
+					} else {
+						reception.getFirst().content(content);
+					}
+				}
+			}
+		} finally {
+			for (IPair<IRequestChainer, IHttpReception> reception : drainedQueue) {
+				if (reception.getSecond() instanceof IHttpContent) {
+					((IHttpContent)reception.getSecond()).getContent().release();
 				}
 			}
 		}
@@ -98,6 +106,7 @@ public class AccessControlRouteHandler implements IRouteHandler {
 			if (receptionQueue.isEmpty()) {
 				canProceed = true;
 			} else {
+				content.getContent().retain();
 				receptionQueue.add(new Pair<IRequestChainer, IHttpReception>(next, content));
 			}
 		}
@@ -116,6 +125,7 @@ public class AccessControlRouteHandler implements IRouteHandler {
 			if (receptionQueue.isEmpty()) {
 				canProceed = true;
 			} else {
+				content.getContent().retain();
 				receptionQueue.add(new Pair<IRequestChainer, IHttpReception>(next, content));
 			}
 		}
@@ -123,6 +133,30 @@ public class AccessControlRouteHandler implements IRouteHandler {
 		if (canProceed) {
 			if (authorized) next.lastContent(content);
 			else content.dispose();
+		}
+	}
+	
+	@Override
+	public void exceptionCaught(Throwable cause, IResponse response, IRequestChainer next) {
+		List<IPair<IRequestChainer, IHttpReception>> drainedQueue;
+		synchronized (receptionQueue) {
+			drainedQueue = new LinkedList<>(receptionQueue);
+			receptionQueue.clear();
+		}
+		
+		try {
+			for (IPair<IRequestChainer, IHttpReception> pair : drainedQueue) {
+				pair.getFirst().exceptionCaught(cause);
+			}
+		} finally {
+			for (IPair<IRequestChainer, IHttpReception> pair : drainedQueue) {
+				IHttpReception r = pair.getSecond();
+				if (r instanceof IHttpContent) {
+					((IHttpContent)r).getContent().release();
+				}
+			}
+			
+			next.exceptionCaught(cause);
 		}
 	}
 }

@@ -59,7 +59,12 @@ public class ReadRouteHandler extends RouteHandlerAdapter {
 				public void f(IResource p1, Throwable p2) {
 					try {
 						if (p2 != null) {
-							response.send(p2.getMessage(), HttpResponseStatus.INTERNAL_SERVER_ERROR);
+							if (p2 instanceof FileNotFoundException) {
+								response.send(Lo.asJsonObject("status", "not_found"), "application/json", HttpResponseStatus.NOT_FOUND);
+							} else {
+								log.error("Error getting resource", p2);
+								response.send(p2.getMessage(), HttpResponseStatus.INTERNAL_SERVER_ERROR);
+							}
 						} else {
 							respondWithResource(p1, response, content);
 						}

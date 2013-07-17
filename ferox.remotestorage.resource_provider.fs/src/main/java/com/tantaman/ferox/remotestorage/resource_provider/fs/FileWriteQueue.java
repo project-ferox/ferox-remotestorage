@@ -24,7 +24,7 @@ public class FileWriteQueue implements IResourceOutputQueue {
 		Path p = Paths.get(absPath);
 		fileChannel = AsynchronousFileChannel.open(
 				p,
-				(Set)Lo.createSet(StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING),
+				(Set)Lo.createSet(StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE),
 				executor);
 	}
 	

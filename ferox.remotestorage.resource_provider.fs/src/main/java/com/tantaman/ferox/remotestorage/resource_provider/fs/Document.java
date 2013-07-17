@@ -47,7 +47,8 @@ public class Document implements IDocumentResource {
 	public String getContentType() {
 		// TODO: fill this in correctly.
 		// this would involve looking up the corresponding md entry...
-		return "text/plain";
+//		return "text/plain";
+		return "application/json";
 	}
 
 	@Override
