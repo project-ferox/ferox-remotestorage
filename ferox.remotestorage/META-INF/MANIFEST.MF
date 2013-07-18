@@ -2,19 +2,19 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: ferox.remotestorage
 Bundle-SymbolicName: ferox.remotestorage
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 0.0.1.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Import-Package: com.tantaman.ferox.api.request_response,
  com.tantaman.ferox.api.router,
- com.tantaman.ferox.util;version="1.0.0",
+ com.tantaman.ferox.util,
  com.tantaman.ferox.webfinger.entry,
- com.tantaman.lo4j;version="1.0.0",
- io.netty.buffer;version="4.0.0.CR5-SNAPSHOT",
- io.netty.channel;version="4.0.0.CR5-SNAPSHOT",
- io.netty.handler.codec.http;version="4.0.0.CR5-SNAPSHOT",
- io.netty.handler.stream;version="4.0.0.CR5-SNAPSHOT",
- io.netty.util.concurrent;version="4.0.0.CR5-SNAPSHOT",
- io.netty.util;version="4.0.0.CR5-SNAPSHOT",
+ com.tantaman.lo4j,
+ io.netty.buffer;version="[4.0,5)",
+ io.netty.channel;version="[4.0,5)",
+ io.netty.handler.codec.http;version="[4.0,5)",
+ io.netty.handler.stream;version="[4.0,5)",
+ io.netty.util.concurrent;version="[4.0,5)",
+ io.netty.util;version="[4.0,5)",
  org.slf4j;provider=paxlogging
 Service-Component: OSGI-INF/*
 Export-Package: com.tantaman.ferox.remotestorage,

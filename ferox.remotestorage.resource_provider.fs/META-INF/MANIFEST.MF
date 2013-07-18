@@ -2,11 +2,11 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: ferox.remotestorage.resource_provider.fs
 Bundle-SymbolicName: ferox.remotestorage.resource_provider.fs
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 0.0.1.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Import-Package: com.tantaman.ferox.remotestorage,
  com.tantaman.ferox.remotestorage.resource,
  com.tantaman.ferox.webfinger,
- com.tantaman.lo4j;version="1.0.0",
+ com.tantaman.lo4j,
  org.slf4j;provider=paxlogging
 Service-Component: OSGI-INF/*
