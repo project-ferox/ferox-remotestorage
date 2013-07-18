@@ -12,6 +12,7 @@
   <module>../ferox.remotestorage.auth_repo.mapdb</module>
   <module>../ferox.remotestorage.resource_provider.fs</module>
   <module>../ferox.remotestorage.server.standalone</module>
+  <module>../ferox.remotestorage.demo_server.feature</module>
   </modules>
   
   <properties>
