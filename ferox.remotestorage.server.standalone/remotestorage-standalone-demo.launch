@@ -6,7 +6,7 @@
 <stringAttribute key="bootstrap" value=""/>
 <stringAttribute key="checked" value="[NONE]"/>
 <booleanAttribute key="clearConfig" value="false"/>
-<stringAttribute key="configLocation" value="${workspace_loc}/.metadata/.plugins/org.eclipse.pde.core/remotestorage-standalone"/>
+<stringAttribute key="configLocation" value="${workspace_loc}/.metadata/.plugins/org.eclipse.pde.core/remotestorage-standalone-demo"/>
 <booleanAttribute key="default" value="true"/>
 <booleanAttribute key="default_auto_start" value="true"/>
 <intAttribute key="default_start_level" value="4"/>
@@ -24,5 +24,5 @@
 <booleanAttribute key="tracing" value="false"/>
 <booleanAttribute key="useCustomFeatures" value="false"/>
 <booleanAttribute key="useDefaultConfigArea" value="true"/>
-<stringAttribute key="workspace_bundles" value="ST4@default:default,antlr-runtime@default:default,com.tantaman.ferox.api@default:default,com.tantaman.ferox.server@default:default,com.tantaman.ferox.util@default:default,com.tantaman.ferox.webfinger@default:default,com.tantaman.ferox@default:default,com.tantaman.lo4j@default:default,ferox.remotestorage.auth_dummy@default:default,ferox.remotestorage.auth_manager.exposed.rest@default:default,ferox.remotestorage.auth_repo.mapdb@default:default,ferox.remotestorage.resource_provider.fs@default:default,ferox.remotestorage.server.standalone@default:default,ferox.remotestorage@default:default,ferox.webfinger.resource_provider.blank@default:default,org.mapdb@default:default"/>
+<stringAttribute key="workspace_bundles" value="ST4@default:default,antlr-runtime@default:default,com.tantaman.ferox.api@default:default,com.tantaman.ferox.remotestorage.auth_dummy@default:default,com.tantaman.ferox.remotestorage.auth_manager.exposed.rest@default:default,com.tantaman.ferox.remotestorage.auth_repo.mapdb@default:default,com.tantaman.ferox.remotestorage.resource_provider.fs@default:default,com.tantaman.ferox.remotestorage.server.standalone@default:default,com.tantaman.ferox.remotestorage@default:default,com.tantaman.ferox.server@default:default,com.tantaman.ferox.util@default:default,com.tantaman.ferox.webfinger.resource_provider.blank@default:default,com.tantaman.ferox.webfinger@default:default,com.tantaman.ferox@default:default,com.tantaman.lo4j@default:default,org.mapdb@default:default"/>
 </launchConfiguration>
