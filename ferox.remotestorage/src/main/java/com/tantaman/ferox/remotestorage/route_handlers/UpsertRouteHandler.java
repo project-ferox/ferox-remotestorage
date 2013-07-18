@@ -25,7 +25,7 @@ public class UpsertRouteHandler extends RouteHandlerAdapter {
 
 	private static final Logger log = LoggerFactory.getLogger(UpsertRouteHandler.class);
 	private final List<IHttpReception> receptionQueue = new LinkedList<>();
-	private volatile IResourceOutputQueue resource;
+	private IResourceOutputQueue resource;
 
 	public UpsertRouteHandler(IResourceProvider resourceProvider) {
 		this.resourceProvider = resourceProvider;
@@ -36,22 +36,16 @@ public class UpsertRouteHandler extends RouteHandlerAdapter {
 			final IRequestChainer next) {
 		IResourceIdentifier identifier = response.getUserData();
 
-		synchronized (receptionQueue) {
-			receptionQueue.clear();
-			receptionQueue.add(request);
-		}
+		//		synchronized (receptionQueue) {
+		receptionQueue.clear();
+		receptionQueue.add(request);
+		//		}
 
 		try {
 			resourceProvider.openForWrite(identifier, new Lo.VFn2<IResourceOutputQueue, Throwable>() {
 				@Override
 				public void f(IResourceOutputQueue p1, Throwable p2) {
-					if (p1 != null) {
-						resource = p1;
-						processReceptionQueue(response);
-					} else {
-						log.error("Couldn't get resource", p2);
-						response.send(Lo.asJsonObject("status", "error"), "application/json", HttpResponseStatus.INTERNAL_SERVER_ERROR);
-					}
+					openCallback(p1, p2, response);
 				}
 			});
 		} catch (IllegalStateException e) {
@@ -62,15 +56,30 @@ public class UpsertRouteHandler extends RouteHandlerAdapter {
 		next.request(request);
 	}
 
+	private void openCallback(final IResourceOutputQueue p1, final Throwable p2, final IResponse response) {
+		response.executor().execute(new Runnable() {
+			@Override
+			public void run() {
+				if (p1 != null) {
+					resource = p1;
+					processReceptionQueue(response);
+				} else {
+					log.error("Couldn't get resource", p2);
+					response.send(Lo.asJsonObject("status", "error"), "application/json", HttpResponseStatus.INTERNAL_SERVER_ERROR);
+				}
+			}
+		});
+	}
+
 	// TODO: abstract out the reception queue stuff
 	// as the AccessControlRouteHandler is doing the same thing.
 	private void processReceptionQueue(IResponse response) {
 		log.debug("Processing reception queue");
 		List<IHttpReception> drainedQueue;
-		synchronized (receptionQueue) {
+//		synchronized (receptionQueue) {
 			drainedQueue = new LinkedList<>(receptionQueue);
 			receptionQueue.clear();
-		}
+//		}
 
 		for (IHttpReception reception : drainedQueue) {
 			if (reception instanceof IHttpContent) {
@@ -97,14 +106,14 @@ public class UpsertRouteHandler extends RouteHandlerAdapter {
 
 	private void preprocess(IHttpContent content, IRequestChainer next, IResponse response) {
 		boolean canProceed = false;
-		synchronized (receptionQueue) {
+//		synchronized (receptionQueue) {
 			if (receptionQueue.isEmpty())
 				canProceed = true;
 			else {
 				content.getContent().retain();
 				receptionQueue.add(content);
 			}
-		}
+//		}
 
 		if (canProceed) {
 			processContent(content, response);
@@ -127,22 +136,22 @@ public class UpsertRouteHandler extends RouteHandlerAdapter {
 			content.getContent().release();
 		}
 	}
-	
+
 	@Override
 	public void exceptionCaught(Throwable cause, IResponse response,
 			IRequestChainer next) {
 		List<IHttpReception> drainedQueue;
-		synchronized (receptionQueue) {
+//		synchronized (receptionQueue) {
 			drainedQueue = new LinkedList<>(receptionQueue);
 			receptionQueue.clear();
-		}
-		
+//		}
+
 		for (IHttpReception r : drainedQueue) {
 			if (r instanceof IHttpContent) {
 				((IHttpContent)r).getContent().release();
 			}
 		}
-		
+
 		next.exceptionCaught(cause);
 	}
 
