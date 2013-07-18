@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: ferox.remotestorage
-Bundle-SymbolicName: ferox.remotestorage
+Bundle-SymbolicName: com.tantaman.ferox.remotestorage
 Bundle-Version: 0.0.1.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Import-Package: com.tantaman.ferox.api.request_response,

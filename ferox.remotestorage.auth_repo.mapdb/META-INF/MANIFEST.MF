@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: remotestorage.auth_repo.derby
-Bundle-SymbolicName: ferox.remotestorage.auth_repo.mapdb
+Bundle-Name: remotestorage.auth_repo.mapdb
+Bundle-SymbolicName: com.tantaman.ferox.remotestorage.auth_repo.mapdb
 Bundle-Version: 0.0.1.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Service-Component: OSGI-INF/*
