@@ -1,7 +1,7 @@
 package com.tantaman.ferox.remotestorage.resource;
 
-import java.util.List;
+import java.util.Map;
 
 public interface IDirectoryResource extends IResource {
-	public List<IResource> getListing();
+	public Map<String, String> getListing();
 }

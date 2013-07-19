@@ -14,9 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.LinkedHashMap;
 import java.util.Locale;
-import java.util.Map;
 import java.util.TimeZone;
 
 import org.slf4j.Logger;
@@ -45,38 +43,43 @@ public class ReadRouteHandler extends RouteHandlerAdapter {
 		this.resourceProvider = resourceProvider;
 	}
 	
-	
 	@Override
 	public void lastContent(final IHttpContent content, final IResponse response,
 			IRequestChainer next) {
 		IResourceIdentifier identifier = response.getUserData();
-		
 		try {
-			// TODO: this callback is going to be run on the resourceProvider's fetch thread...
-			// Should we create an event queue for callbacks to be placed on?
 			resourceProvider.getResource(identifier, new Lo.VFn2<IResource, Throwable>() {
 				@Override
 				public void f(IResource p1, Throwable p2) {
-					try {
-						if (p2 != null) {
-							if (p2 instanceof FileNotFoundException) {
-								response.send(Lo.asJsonObject("status", "not_found"), "application/json", HttpResponseStatus.NOT_FOUND);
-							} else {
-								log.error("Error getting resource", p2);
-								response.send(p2.getMessage(), HttpResponseStatus.INTERNAL_SERVER_ERROR);
-							}
-						} else {
-							respondWithResource(p1, response, content);
-						}
-					} finally {
-						content.dispose();
-					}
+					getResourceCallback(p1, p2, response, content);
 				}
 			});
 		} catch (IllegalStateException e) {
 			content.dispose();
 			response.send(e.getMessage(), HttpResponseStatus.BAD_REQUEST);
 		}
+	}
+	
+	private void getResourceCallback(final IResource p1, final Throwable p2, final IResponse response, final IHttpContent content) {
+		response.executor().execute(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					if (p2 != null) {
+						if (p2 instanceof FileNotFoundException) {
+							response.send(Lo.asJsonObject("status", "not_found"), "application/json", HttpResponseStatus.NOT_FOUND);
+						} else {
+							log.error("Error getting resource", p2);
+							response.send(p2.getMessage(), HttpResponseStatus.INTERNAL_SERVER_ERROR);
+						}
+					} else {
+						respondWithResource(p1, response, content);
+					}
+				} finally {
+					content.dispose();
+				}
+			}
+		});
 	}
 	
 	private void respondWithResource(IResource p1, IResponse response, IHttpContent request) {
@@ -94,17 +97,8 @@ public class ReadRouteHandler extends RouteHandlerAdapter {
 		} else if (p1 instanceof IDirectoryResource) {
 			IDirectoryResource dir = (IDirectoryResource)p1;
 			
-			Map<String, String> result = new LinkedHashMap<>();
-			for (IResource f : dir.getListing()) {
-				if (f instanceof IDirectoryResource) {
-					result.put(f.getName() + "/", f.getVersion());
-				} else {
-					result.put(f.getName(), f.getVersion());
-				}
-			}
-			
 			StringBuilder b = new StringBuilder();
-			response.send(Lo.asJsonObject(result, b).toString(), "application/json");
+			response.send(Lo.asJsonObject(dir.getListing(), b).toString(), "application/json");
 		}
 	}
 	

@@ -86,7 +86,7 @@ public class AuthorizationManager implements IAuthManager {
 		if (scopeRepository != null) {
 			IPair<String, Set<String>> userAndScopes = scopeRepository.getScopes(bearerToken);
 			
-			if (!resource.getUser().equals(userAndScopes.getFirst())) {
+			if (userAndScopes == null || !resource.getUser().equals(userAndScopes.getFirst())) {
 				callback.f(false, null);
 				return;
 			}

@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -121,9 +121,11 @@ public class FsResourceProvider implements IResourceProvider {
 			if (f.exists()) {
 				File [] listing = f.listFiles();
 				
-				List<IResource> documentListing = new ArrayList<>(listing.length);
+				Map<String, String> documentListing = new LinkedHashMap<>(listing.length);
 				for (File file : listing) {
-					documentListing.add(ResourceFactory.create(file));
+					String name = file.getName();
+					if (file.isDirectory()) name += "/";
+					documentListing.put(name, Document.getVersion(file));
 				}
 				
 				callback.f(new Directory(f.getName(), documentListing), null);
@@ -133,7 +135,12 @@ public class FsResourceProvider implements IResourceProvider {
 		} else {
 			File f = new File(path);
 			if (f.exists() && f.getAbsolutePath().startsWith(prefix)) {
-				callback.f(new Document(f), null);
+				try {
+					Document doc = new Document(f);
+					callback.f(doc, null);
+				} catch (FileNotFoundException e) {
+					callback.f(null, e);
+				}
 			} else {
 				callback.f(null, new FileNotFoundException("File not found for: " + path));
 			}

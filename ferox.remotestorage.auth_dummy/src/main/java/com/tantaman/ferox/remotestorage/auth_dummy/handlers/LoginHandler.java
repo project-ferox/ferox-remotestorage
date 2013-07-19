@@ -107,6 +107,7 @@ public class LoginHandler extends RouteHandlerAdapter {
 
 		// generate the token
 		String token = UUID.randomUUID().toString();
+		// todo: check for and get existing token
 		Authorization auth = new Authorization(token, username, (Set)Lo.createSet(scope));
 		authManager.addAuthorization(auth, null);
 

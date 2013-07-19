@@ -18,6 +18,6 @@ public class Main {
 //		server.use(ChannelMiddleware.BODY_PARSER);
 		log.debug("RemoteStorage listening on 443");
 		// TODO: it doesn't seem like the netty ChunkedWriter works in conjunction with ssl.....  why??
-		server.listen(443, true); //443
+		server.listen(80, false); //443
 	}
 }
