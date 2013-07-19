@@ -1,4 +1,4 @@
-RegistrationPage(alert) ::= <<
+RegistrationPage(alert, params) ::= <<
 	<!DOCTYPE html>
 	<html>
 	<head>
@@ -37,7 +37,7 @@ RegistrationPage(alert) ::= <<
   			</div>
   			
   			<div class="modal-footer">
-  				<a href="registrations/clear">Clear Users</a> | <a href="dialog">Login</a>
+  				<a href="dialog?client_id={params.client_id}&response_type={params.response_type}&scope={params.scope}&state={params.state}&redirect_uri={params.redirect_uri}">Login</a>
   			</div>
 		</div>
 	</body>

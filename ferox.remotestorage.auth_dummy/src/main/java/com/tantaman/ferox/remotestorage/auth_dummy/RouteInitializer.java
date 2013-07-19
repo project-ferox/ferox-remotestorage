@@ -48,7 +48,7 @@ public class RouteInitializer implements IRouteInitializer {
 		routerBuilder.post(uriRoot + "/registrations", RouteMiddleware.bodyParser());
 		routerBuilder.post(uriRoot + "/registrations", Factories.createUser(userRepo));
 		
-		routerBuilder.get(uriRoot + "/registrations/clear", Factories.clearUsers(userRepo));
+//		routerBuilder.get(uriRoot + "/registrations/clear", Factories.clearUsers(userRepo));
 	}
 
 	@Override

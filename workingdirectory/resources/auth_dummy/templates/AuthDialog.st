@@ -1,4 +1,4 @@
-AuthDialog(alert) ::= <%
+AuthDialog(alert, params) ::= <%
 	<!DOCTYPE html>
 	<html>
 	<head>
@@ -37,7 +37,7 @@ AuthDialog(alert) ::= <%
   			</div>
   			
   			<div class="modal-footer">
-    			<a href="registrations/clear">Clear Users</a> | <a href="registrations">Register</a>
+    			<a href="registrations?client_id={params.client_id}&response_type={params.response_type}&scope={params.scope}&state={params.state}&redirect_uri={params.redirect_uri}">Register</a>
   			</div>
 		</div>
 	</body>
