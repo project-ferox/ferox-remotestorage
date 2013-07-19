@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project default="plugin_export" name="build">
+	<target name="plugin_export">
+		<pde.exportPlugins destination="../../remotestorage-felix-runtime" exportSource="false" exportType="directory" plugins="antlr-runtime,com.tantaman.ferox,com.tantaman.ferox.api,com.tantaman.ferox.remotestorage,com.tantaman.ferox.remotestorage.auth_dummy,com.tantaman.ferox.remotestorage.auth_repo.mapdb,com.tantaman.ferox.remotestorage.resource_provider.fs,com.tantaman.ferox.remotestorage.server.standalone,com.tantaman.ferox.server,com.tantaman.ferox.util,com.tantaman.ferox.webfinger,com.tantaman.ferox.webfinger.resource_provider.blank,com.tantaman.lo4j,org.mapdb,ST4" useJARFormat="true"/>
+	</target>
+</project>
