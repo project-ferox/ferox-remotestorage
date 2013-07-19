@@ -48,7 +48,7 @@ public class ReadRouteHandler extends RouteHandlerAdapter {
 			IRequestChainer next) {
 		IResourceIdentifier identifier = response.getUserData();
 		try {
-			resourceProvider.getResource(identifier, new Lo.VFn2<IResource, Throwable>() {
+			resourceProvider.openForRead(identifier, new Lo.VFn2<IResource, Throwable>() {
 				@Override
 				public void f(IResource p1, Throwable p2) {
 					getResourceCallback(p1, p2, response, content);

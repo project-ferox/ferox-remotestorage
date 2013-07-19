@@ -62,12 +62,14 @@ public class Document implements IDocumentResource {
 	}
 
 	@Override
-	public String getVersion() {
+	public Object getVersion() {
 		return getVersion(file);
 	}
 	
-	public static String getVersion(File f) {
-		return Long.toString(f.lastModified());
+	public static Object getVersion(File f) {
+		// TODO: this version calculation depends on the version of the remotestorage protocol
+		// we are using (unfortunately)...
+		return f.lastModified(); //Long.toString(f.lastModified());
 	}
 
 	@Override

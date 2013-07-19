@@ -24,39 +24,37 @@ import com.tantaman.lo4j.Lo;
 
 public class AccessControlRouteHandler implements IRouteHandler {
 	private static final Logger log = LoggerFactory.getLogger(AccessControlRouteHandler.class);
-	
+
 	private final IAuthManager authManager;
-	
+
 	// synch shouldn't be required anymore due to the user of response.executor to get the
 	// event executor that belongs to this channel (I believe).
 	private /*volatile*/ boolean authorized = false;
 	private final List<IPair<IRequestChainer, IHttpReception>> receptionQueue = new LinkedList<>();
-	
+
 	public AccessControlRouteHandler(IAuthManager authManager) {
 		this.authManager = authManager;
 	}
-	
+
 	@Override
 	public void request(final IHttpRequest request, final IResponse response,
 			final IRequestChainer next) {
 		IResourceIdentifier resourceIdentifier = response.getUserData();
 		authorized = false;
-//		synchronized (receptionQueue) { // synch no longer needed due to the use of EventExcutor (I believe)
-			receptionQueue.clear();
-			receptionQueue.add(new Pair<IRequestChainer, IHttpReception>(next, request));
-//		}
-		
+		receptionQueue.clear();
+		receptionQueue.add(new Pair<IRequestChainer, IHttpReception>(next, request));
+
 		authManager.isAuthorized(resourceIdentifier,
 				request.getHeaders().get(HttpHeaders.Names.AUTHORIZATION),
 				request.getMethod(),
 				new Lo.VFn2<Boolean, Throwable>() {
-					@Override
-					public void f(final Boolean authorized, final Throwable err) {
-						authCallback(authorized, err, response, request);
-					}
-			});
+			@Override
+			public void f(final Boolean authorized, final Throwable err) {
+				authCallback(authorized, err, response, request);
+			}
+		});
 	}
-	
+
 	private void authCallback(final Boolean authorized, final Throwable err, final IResponse response, final IHttpRequest request) {
 		response.executor().execute(new Runnable() {
 			@Override
@@ -69,30 +67,22 @@ public class AccessControlRouteHandler implements IRouteHandler {
 					response.send("{\"status\": \"unauthorized\"}", "application/json", HttpResponseStatus.UNAUTHORIZED)
 					.addListener(ChannelFutureListener.CLOSE);
 					request.dispose();
-//					synchronized (receptionQueue) {
-						receptionQueue.clear();
-//					}
+					receptionQueue.clear();
 				}
 			}
 		});
 	}
-	
+
 	private void processReceptionQueue() {
-		List<IPair<IRequestChainer, IHttpReception>> drainedQueue;
-//		synchronized (receptionQueue) {
-			drainedQueue = new LinkedList<>(receptionQueue);
-			receptionQueue.clear();
-//		}
-		
 		try {
-			for (IPair<IRequestChainer, IHttpReception> reception : drainedQueue) {
+			for (IPair<IRequestChainer, IHttpReception> reception : receptionQueue) {
 				if (reception.getSecond() instanceof IHttpRequest) {
 					reception.getFirst().request((IHttpRequest)reception.getSecond());
 				}
-				
+
 				if (reception.getSecond() instanceof IHttpContent) {
 					IHttpContent content = (IHttpContent)reception.getSecond();
-					
+
 					if (content.isLast()) {
 						reception.getFirst().lastContent(content);
 					} else {
@@ -101,11 +91,12 @@ public class AccessControlRouteHandler implements IRouteHandler {
 				}
 			}
 		} finally {
-			for (IPair<IRequestChainer, IHttpReception> reception : drainedQueue) {
+			for (IPair<IRequestChainer, IHttpReception> reception : receptionQueue) {
 				if (reception.getSecond() instanceof IHttpContent) {
 					((IHttpContent)reception.getSecond()).getContent().release();
 				}
 			}
+			receptionQueue.clear();
 		}
 	}
 
@@ -113,15 +104,14 @@ public class AccessControlRouteHandler implements IRouteHandler {
 	public void content(IHttpContent content, IResponse response,
 			IRequestChainer next) {
 		boolean canProceed = false;
-//		synchronized (receptionQueue) {
-			if (receptionQueue.isEmpty()) {
-				canProceed = true;
-			} else {
-				content.getContent().retain();
+		if (receptionQueue.isEmpty()) {
+			canProceed = true;
+		} else {
+			content.getContent().retain();
+			if (!(content instanceof IHttpRequest))
 				receptionQueue.add(new Pair<IRequestChainer, IHttpReception>(next, content));
-			}
-//		}
-		
+		}
+
 		if (canProceed) {
 			if (authorized) next.content(content);
 			else content.dispose();
@@ -132,41 +122,35 @@ public class AccessControlRouteHandler implements IRouteHandler {
 	public void lastContent(IHttpContent content, IResponse response,
 			IRequestChainer next) {
 		boolean canProceed = false;
-//		synchronized (receptionQueue) {
-			if (receptionQueue.isEmpty()) {
-				canProceed = true;
-			} else {
-				content.getContent().retain();
+		if (receptionQueue.isEmpty()) {
+			canProceed = true;
+		} else {
+			content.getContent().retain();
+			if (!(content instanceof IHttpRequest))
 				receptionQueue.add(new Pair<IRequestChainer, IHttpReception>(next, content));
-			}
-//		}
-		
+		}
+
 		if (canProceed) {
 			if (authorized) next.lastContent(content);
 			else content.dispose();
 		}
 	}
-	
+
 	@Override
 	public void exceptionCaught(Throwable cause, IResponse response, IRequestChainer next) {
-		List<IPair<IRequestChainer, IHttpReception>> drainedQueue;
-//		synchronized (receptionQueue) {
-			drainedQueue = new LinkedList<>(receptionQueue);
-			receptionQueue.clear();
-//		}
-		
 		try {
-			for (IPair<IRequestChainer, IHttpReception> pair : drainedQueue) {
+			for (IPair<IRequestChainer, IHttpReception> pair : receptionQueue) {
 				pair.getFirst().exceptionCaught(cause);
 			}
 		} finally {
-			for (IPair<IRequestChainer, IHttpReception> pair : drainedQueue) {
+			for (IPair<IRequestChainer, IHttpReception> pair : receptionQueue) {
 				IHttpReception r = pair.getSecond();
 				if (r instanceof IHttpContent) {
 					((IHttpContent)r).getContent().release();
 				}
 			}
-			
+
+			receptionQueue.clear();
 			next.exceptionCaught(cause);
 		}
 	}

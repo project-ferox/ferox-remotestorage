@@ -2,6 +2,6 @@ package com.tantaman.ferox.remotestorage.resource;
 
 
 public interface IResource {
-	public String getVersion();
+	public Object getVersion();
 	public String getName();
 }

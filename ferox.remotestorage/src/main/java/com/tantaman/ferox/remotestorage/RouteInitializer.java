@@ -49,6 +49,7 @@ public class RouteInitializer implements IRouteInitializer {
 		IRouteHandlerFactory accessControl = HandlerFactories.accessControl(authManager);
 		IRouteHandlerFactory read = HandlerFactories.read(resourceProvider);
 		
+		// TODO: seems like some RS clients are expecting responses from these host-meta URIs...
 //		routerBuilder.get("/.well-known/host-meta.json", new IRouteHandlerFactory() {
 //			
 //			@Override
@@ -74,7 +75,7 @@ public class RouteInitializer implements IRouteInitializer {
 		
 		routerBuilder.delete(route, identifierBuilderFactory);		
 		routerBuilder.delete(route, accessControl);
-		routerBuilder.delete(route, HandlerFactories.DELETE);
+		routerBuilder.delete(route, HandlerFactories.delete(resourceProvider));
 		
 		webfingerMiddlewareInit.addRoutes(routerBuilder);
 	}

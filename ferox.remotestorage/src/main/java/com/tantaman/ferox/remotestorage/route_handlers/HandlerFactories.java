@@ -50,13 +50,15 @@ public class HandlerFactories {
 			}
 		};
 	}
-
-	public static final IRouteHandlerFactory DELETE = new IRouteHandlerFactory() {
-		@Override
-		public IRouteHandler create() {
-			return null;
-		}
-	};
+	
+	public static final IRouteHandlerFactory delete(final IResourceProvider resourceProvider) {
+		return new IRouteHandlerFactory() {
+			@Override
+			public IRouteHandler create() {
+				return new DeleteRouteHandler(resourceProvider);
+			}
+		};
+	}
 
 	//	Access-Control-Allow-Origin: http://hello-world.example
 	//	Access-Control-Max-Age: 3628800
