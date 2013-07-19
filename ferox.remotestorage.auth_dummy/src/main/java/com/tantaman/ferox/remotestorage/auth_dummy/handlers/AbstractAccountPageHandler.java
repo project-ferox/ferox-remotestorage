@@ -13,20 +13,20 @@ import com.tantaman.ferox.api.router.RouteHandlerAdapter;
 
 public abstract class AbstractAccountPageHandler extends RouteHandlerAdapter  {
 	protected abstract ST getTemplate();
-	
+
 	@Override
 	public void lastContent(IHttpContent content, IResponse response,
 			IRequestChainer next) {
 		ST tpl = getTemplate();
-		
+
 		Map<String, String> params = HandlerUtils.extractOauthParams(content);
-		
+
 		String alert = content.getQueryParam("alert");
 		tpl.add("alert", alert);
 		tpl.add("params", params);
-		
+
 		response.send(tpl.render(), HttpResponseStatus.OK);
-		
+
 		next.content(content);
 	}
 }

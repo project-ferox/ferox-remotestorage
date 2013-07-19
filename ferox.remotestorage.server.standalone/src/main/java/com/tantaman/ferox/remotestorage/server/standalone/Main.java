@@ -16,9 +16,14 @@ public class Main {
 		// We don't want to ever use the body parser since in 99% of the cases 
 		// where a user is putting to RS it won't be applicable.
 //		server.use(ChannelMiddleware.BODY_PARSER);
-		log.debug("RemoteStorage listening on 443");
-		// TODO: it doesn't seem like the netty ChunkedWriter works in conjunction with ssl.....  why??
-//		server.listen(80, false);
-		server.listen(443, true);
+		
+		int port;
+		try {
+			port = Integer.parseInt(System.getProperty("remotestorage.server.port"));
+		} catch (NumberFormatException e) {
+			port = 443;
+		}
+		log.debug("RemoteStorage listening on " + port);
+		server.listen(port, true);
 	}
 }
