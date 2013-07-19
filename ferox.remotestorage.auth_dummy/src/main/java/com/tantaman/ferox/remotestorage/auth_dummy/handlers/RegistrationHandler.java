@@ -57,6 +57,7 @@ public class RegistrationHandler extends RouteHandlerAdapter {
 					params.put("alert", "registration successful.  You may now log in.");
 					response.redirect("dialog", params);
 				} catch (IOException | InvalidKeySpecException | NoSuchAlgorithmException e) {
+					e.printStackTrace();
 					params.put("alert", "server error");
 					response.redirect(content.getPath(), params);
 				}

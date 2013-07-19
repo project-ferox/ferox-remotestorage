@@ -13,6 +13,9 @@ Import-Package: com.tantaman.ferox.api.request_response,
  io.netty.handler.codec.http;version="[4.0,5)",
  io.netty.handler.codec.http.multipart;version="[4.0,5)",
  org.mapdb,
- org.stringtemplate.v4
+ org.slf4j;provider=paxlogging,
+ org.stringtemplate.v4,
+ javax.crypto.spec,
+ javax.crypto
 Service-Component: OSGI-INF/*
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
