@@ -17,6 +17,8 @@
 
 	<properties>
 		<tycho-version>0.17.0</tycho-version>
+		<webfinger-version>0.0.1-SNAPSHOT</webfinger-version>
+		<ferox-version>0.0.1-SNAPSHOT</ferox-version>
 	</properties>
 
 	<dependencies>
