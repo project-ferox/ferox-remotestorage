@@ -1,3 +1,6 @@
 [submodule "wrapped"]
 	path = wrapped
 	url = git@github.com:project-ferox/wrapped.git
+[submodule "felix"]
+	path = felix
+	url = git@github.com:project-ferox/remotestorage-felix-runtime.git
