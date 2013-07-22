@@ -27,21 +27,21 @@
 			<artifactId>antlr-runtime</artifactId>
 			<version>3.5</version>
 			<scope>system</scope>
-			<systemPath>${basedir}/../../wrapped/plugins/antlr-runtime_3.5.0.jar</systemPath>
+			<systemPath>${basedir}/../wrapped/plugins/antlr-runtime_3.5.0.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>org.mapdb</groupId>
 			<artifactId>org.mapdb</artifactId>
 			<version>0.9.3</version>
 			<scope>system</scope>
-			<systemPath>${basedir}/../../wrapped/plugins/org.mapdb_0.9.3.jar</systemPath>
+			<systemPath>${basedir}/../wrapped/plugins/org.mapdb_0.9.3.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>ST4</groupId>
 			<artifactId>ST4</artifactId>
 			<version>4.0.0</version>
 			<scope>system</scope>
-			<systemPath>${basedir}/../../wrapped/plugins/ST4_4.0.0.jar</systemPath>
+			<systemPath>${basedir}/../wrapped/plugins/ST4_4.0.0.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>org.ops4j.pax.logging</groupId>

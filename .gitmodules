@@ -1,0 +1,3 @@
+[submodule "wrapped"]
+	path = wrapped
+	url = git@github.com:project-ferox/wrapped.git

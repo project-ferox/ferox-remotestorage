@@ -35,7 +35,7 @@
 											<fileset dir="${basedir}/../workingdirectory"></fileset>
 										</copy>
 										<copy todir="${runtime-dir}/load">
-											<fileset dir="${basedir}/../../wrapped/plugins"></fileset>
+											<fileset dir="${basedir}/../wrapped/plugins"></fileset>
 										</copy>
 									</tasks>
 								</configuration>
