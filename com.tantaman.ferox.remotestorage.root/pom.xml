@@ -8,11 +8,11 @@
 	<modules>
 
 		<module>../ferox.remotestorage</module>
-		<module>../ferox.remotestorage.auth_dummy</module>
 		<module>../ferox.remotestorage.auth_manager.exposed.rest</module>
 		<module>../ferox.remotestorage.auth_repo.mapdb</module>
 		<module>../ferox.remotestorage.resource_provider.fs</module>
 		<module>../ferox.remotestorage.server.standalone</module>
+		<module>../ferox.remotestorage.accounts_site</module>
 	</modules>
 
 	<properties>

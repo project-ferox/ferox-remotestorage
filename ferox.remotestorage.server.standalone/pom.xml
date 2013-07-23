@@ -64,7 +64,7 @@
 										<artifactItem>
 											<groupId>${project.groupId}</groupId>
 											<version>${project.version}</version>
-											<artifactId>com.tantaman.ferox.remotestorage.auth_dummy</artifactId>
+											<artifactId>com.tantaman.ferox.remotestorage.accounts_site</artifactId>
 										</artifactItem>
 										<artifactItem>
 											<groupId>${project.groupId}</groupId>
