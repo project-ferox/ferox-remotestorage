@@ -1,4 +1,6 @@
-mvn package
+#!/bin/sh
+
+mvn install
 
 cd ../felix
 ./clean.sh
