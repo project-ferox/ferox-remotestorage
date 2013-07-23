@@ -31,6 +31,7 @@
 								</goals>
 								<configuration>
 									<tasks>
+										<delete dir="${runtime-dir}" />
 										<copy todir="${runtime-dir}">
 											<fileset dir="${basedir}/../workingdirectory"></fileset>
 										</copy>

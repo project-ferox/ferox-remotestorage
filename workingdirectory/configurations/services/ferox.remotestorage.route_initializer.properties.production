@@ -1,4 +1,4 @@
 storageRootUri=/storage
-authDialogUri=/auth_dummy/dialog
+authDialogUri=/accounts/dialog
 hostname=tantaman.com
 protocol=https
