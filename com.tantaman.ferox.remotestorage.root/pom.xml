@@ -6,13 +6,12 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<modules>
-
 		<module>../ferox.remotestorage</module>
 		<module>../ferox.remotestorage.auth_manager.exposed.rest</module>
 		<module>../ferox.remotestorage.auth_repo.mapdb</module>
 		<module>../ferox.remotestorage.resource_provider.fs</module>
-		<module>../ferox.remotestorage.server.standalone</module>
 		<module>../ferox.remotestorage.accounts_site</module>
+		<module>../ferox.remotestorage.server.standalone</module>
 	</modules>
 
 	<properties>
@@ -62,11 +61,6 @@
 			<groupId>org.osgi</groupId>
 			<artifactId>org.osgi.compendium</artifactId>
 			<version>4.3.1</version>
-		</dependency>
-		<dependency>
-			<groupId>io.netty</groupId>
-			<artifactId>netty-codec-http</artifactId>
-			<version>4.0.2.Final</version>
 		</dependency>
 		<dependency>
 			<groupId>io.netty</groupId>

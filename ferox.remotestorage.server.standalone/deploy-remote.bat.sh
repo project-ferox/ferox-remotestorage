@@ -1,6 +1,6 @@
 mvn package
 
-ssh tantaman@tantaman.com:/home/tantaman/remotestorage-server clean.sh
+ssh tantaman@tantaman.com 'cd /home/tantaman/remotestorage-server; ./clean.sh'
 
 scp -r target/runtime/* tantaman@tantaman.com:/home/tantaman/remotestorage-server/
 
