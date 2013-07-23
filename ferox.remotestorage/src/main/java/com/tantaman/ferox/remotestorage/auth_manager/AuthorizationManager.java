@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import com.tantaman.ferox.remotestorage.resource.IResourceIdentifier;
 import com.tantaman.ferox.util.IPair;
 import com.tantaman.lo4j.Lo;
+import com.tantaman.lo4j.NamedThreadFactory;
 
 
 /**
@@ -21,7 +22,7 @@ import com.tantaman.lo4j.Lo;
  */
 public class AuthorizationManager implements IAuthManager {
 	private static final Logger log = LoggerFactory.getLogger(AuthorizationManager.class);
-	private static final ExecutorService AUTH_LOOKUP = Executors.newFixedThreadPool(1);
+	private static final ExecutorService AUTH_LOOKUP = Executors.newFixedThreadPool(1, new NamedThreadFactory("AuthorizationManager"));
 	private volatile IAuthRepo scopeRepository; // TODO: may need to be AtomicReference?  Could it be getting set and unset at the same time and require a CAS? does it matter?
 	
 	public void addAuthorization(Authorization auth, Lo.Fn<Void, Void> callback) {

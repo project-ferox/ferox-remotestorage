@@ -6,7 +6,8 @@ import org.slf4j.LoggerFactory;
 import com.tantaman.ferox.api.server.IPluggableServer;
 
 public class Main {
-	private static final Logger log = LoggerFactory.getLogger(Main.class); 
+	private static final Logger log = LoggerFactory.getLogger(Main.class);
+	private volatile IPluggableServer server;
 	
 	void setPluggableServer(IPluggableServer server) {
 		// the remoteStorage spec calls to just save the entire request body as the contents
@@ -24,6 +25,11 @@ public class Main {
 			port = 443;
 		}
 		log.debug("RemoteStorage listening on " + port);
+		this.server = server;
 		server.listen(port, true);
+	}
+	
+	void deactivate() {
+		server.shutdown();
 	}
 }
