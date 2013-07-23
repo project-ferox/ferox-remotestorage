@@ -1,11 +1,11 @@
-package com.tantaman.ferox.remotestorage.auth_dummy;
+package com.tantaman.ferox.remotestorage.accounts_site;
 
 import java.util.Map;
 
 import com.tantaman.ferox.api.router.IRouteInitializer;
 import com.tantaman.ferox.api.router.IRouterBuilder;
-import com.tantaman.ferox.remotestorage.auth_dummy.auth.UserRepo;
-import com.tantaman.ferox.remotestorage.auth_dummy.handlers.Factories;
+import com.tantaman.ferox.remotestorage.accounts_site.auth.UserRepo;
+import com.tantaman.ferox.remotestorage.accounts_site.handlers.Factories;
 import com.tantaman.ferox.remotestorage.auth_manager.IAuthManager;
 import com.tantaman.ferox.route_middelware.RouteMiddleware;
 

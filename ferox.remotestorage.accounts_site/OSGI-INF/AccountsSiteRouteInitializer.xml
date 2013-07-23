@@ -1,7 +1,7 @@
 <?xml version='1.1'?>
 
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" configuration-policy="require" deactivate="deactivate" name="ferox.remotestorage.auth_dummy">
-  <implementation class="com.tantaman.ferox.remotestorage.auth_dummy.RouteInitializer"/>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" configuration-policy="require" deactivate="deactivate" name="ferox.remotestorage.accounts_site">
+  <implementation class="com.tantaman.ferox.remotestorage.accounts_site.RouteInitializer"/>
   <reference bind="setAuthManager" cardinality="1..1"
    	interface="com.tantaman.ferox.remotestorage.auth_manager.IAuthManager" name="authManager"/>
   <service>

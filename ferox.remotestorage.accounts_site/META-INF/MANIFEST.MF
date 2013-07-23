@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Auth_dummy
-Bundle-SymbolicName: com.tantaman.ferox.remotestorage.auth_dummy
+Bundle-Name: ferox.remotestorage.accounts_site
+Bundle-SymbolicName: com.tantaman.ferox.remotestorage.accounts_site
 Bundle-Version: 0.0.1.qualifier
 Import-Package: com.tantaman.ferox.api.request_response,
  com.tantaman.ferox.api.router,

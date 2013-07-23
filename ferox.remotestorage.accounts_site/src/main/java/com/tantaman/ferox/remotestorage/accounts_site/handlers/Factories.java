@@ -1,8 +1,8 @@
-package com.tantaman.ferox.remotestorage.auth_dummy.handlers;
+package com.tantaman.ferox.remotestorage.accounts_site.handlers;
 
 import com.tantaman.ferox.api.router.IRouteHandler;
 import com.tantaman.ferox.api.router.IRouteHandlerFactory;
-import com.tantaman.ferox.remotestorage.auth_dummy.auth.UserRepo;
+import com.tantaman.ferox.remotestorage.accounts_site.auth.UserRepo;
 import com.tantaman.ferox.remotestorage.auth_manager.IAuthManager;
 
 public class Factories {

@@ -1,4 +1,4 @@
-package com.tantaman.ferox.remotestorage.auth_dummy.handlers;
+package com.tantaman.ferox.remotestorage.accounts_site.handlers;
 
 import io.netty.handler.codec.http.HttpResponseStatus;
 

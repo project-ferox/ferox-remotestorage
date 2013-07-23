@@ -1,4 +1,4 @@
-package com.tantaman.ferox.remotestorage.auth_dummy;
+package com.tantaman.ferox.remotestorage.accounts_site;
 
 public interface ConfigKeys {
 	public static final String STATIC_FS_ROOT = "static_root";

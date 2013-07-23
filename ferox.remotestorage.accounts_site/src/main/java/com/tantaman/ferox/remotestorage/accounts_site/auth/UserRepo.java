@@ -1,4 +1,4 @@
-package com.tantaman.ferox.remotestorage.auth_dummy.auth;
+package com.tantaman.ferox.remotestorage.accounts_site.auth;
 
 import java.io.File;
 import java.security.NoSuchAlgorithmException;
@@ -14,7 +14,7 @@ import org.mapdb.BTreeMap;
 import org.mapdb.DB;
 import org.mapdb.DBMaker;
 
-import com.tantaman.ferox.remotestorage.auth_dummy.ConfigKeys;
+import com.tantaman.ferox.remotestorage.accounts_site.ConfigKeys;
 
 public class UserRepo {
 	private volatile DB db;

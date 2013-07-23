@@ -1,10 +1,10 @@
-package com.tantaman.ferox.remotestorage.auth_dummy.handlers;
+package com.tantaman.ferox.remotestorage.accounts_site.handlers;
 
 import com.tantaman.ferox.api.request_response.IHttpContent;
 import com.tantaman.ferox.api.request_response.IRequestChainer;
 import com.tantaman.ferox.api.request_response.IResponse;
 import com.tantaman.ferox.api.router.RouteHandlerAdapter;
-import com.tantaman.ferox.remotestorage.auth_dummy.auth.UserRepo;
+import com.tantaman.ferox.remotestorage.accounts_site.auth.UserRepo;
 
 public class ClearUsersHandler extends RouteHandlerAdapter {
 	private final UserRepo userRepo;
