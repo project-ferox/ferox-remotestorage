@@ -1,6 +1,21 @@
 [submodule "wrapped"]
 	path = wrapped
-	url = git@github.com:project-ferox/wrapped.git
+	url = https://github.com/project-ferox/wrapped.git
 [submodule "felix"]
 	path = felix
-	url = git@github.com:project-ferox/remotestorage-felix-runtime.git
+	url = https://github.com/project-ferox/remotestorage-felix-runtime.git
+[submodule "dependencies/stringtemplate4"]
+	path = dependencies/stringtemplate4
+	url = https://github.com/project-ferox/stringtemplate4.git
+[submodule "dependencies/MapDB"]
+	path = dependencies/MapDB
+	url = https://github.com/project-ferox/MapDB.git
+[submodule "dependencies/antlr3-runtime"]
+	path = dependencies/antlr3-runtime
+	url = https://github.com/project-ferox/antlr3-runtime.git
+[submodule "dependencies/ferox"]
+	path = dependencies/ferox
+	url = https://github.com/project-ferox/ferox.git
+[submodule "dependencies/ferox-webfinger"]
+	path = dependencies/ferox-webfinger
+	url = https://github.com/project-ferox/ferox-webfinger.git
