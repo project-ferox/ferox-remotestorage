@@ -27,9 +27,14 @@ TODO: (PATCH request)
 TODO: push state via websockets
 TODO: X-Put-Type: File header
 
-# Install and Configure Ferox-Remotestorage
+# Installing Ferox-Remotestorage
 
+The Ferox remotestorage server implementation can be configured in a number of different ways.
+We'll cover the default configuration here as it is the quickest configuration to start testing with.
 
+You can read about other configurations on the [wiki](https://github.com/project-ferox/ferox-remotestorage/wiki).
+
+# More
 Remotestorage is also a specification so it opens up the possibility for users to store their data with any remotestorage provider they choose.  I.e., if you create a client side application with remotestorage support then users of that application could store their data with your server or some other server that implements the remotestorage protocol.  See http://remotestorage.io
 
 
