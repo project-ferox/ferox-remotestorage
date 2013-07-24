@@ -20,14 +20,7 @@ such as `http://example.com/user/documents/school/cs455/homework1.txt`
 the Remotestorage server will create any directories that don't yet exist in the path to homework1.txt.
 
 
-Remotestorage is slightly more complicated than the previous examples since it also handles authentication.
-
-That is, a remotestorage client must acquire an access token before updating, deleting or reading any documents.
-A remotestorage server is capable of issuing access tokens on a per user basis and with various levels of permissions.
-You also don't have to hard code any important information (such as your database credentials) 
-into the client side application.
-
-Learn more about [authentication]().
+Remotestorage can also handle authentication.  Learn more about [authentication]().
 
 
 TODO: (PATCH request)
