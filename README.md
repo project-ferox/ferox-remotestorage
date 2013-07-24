@@ -4,11 +4,11 @@ Ferox-Remotestorage can be run as an embedded or standalone remotestorage server
 
 # What is Remotestorage?
 
-Remotestorage provides client side applications with a means to read and write data to/from a remote server.  Remotestorage can be your entire backend.
+Remotestorage provides client side applications with a means to read and write data to/from a remote server.  A remotestorage server can be your entire backend.
 
 # How do you use it?
 
-Remotestorage provides a REST interface for creating, deleting, reading and updating documents.
+The remotestorage server provides a REST interface for creating, deleting, reading and updating documents.
 
 * Issuing a **PUT** request to `http://example.com/user/documents/todo.json` will create, or update, a document.
 * Issuing a **GET** request to `http://example.com/user/documents/todo.json` will read that document.
@@ -26,6 +26,12 @@ Remotestorage can also handle authentication.  Learn more about [authentication]
 TODO: (PATCH request)
 TODO: push state via websockets
 TODO: X-Put-Type: File header
+
+# Client Libraries
+
+You could communicate with ferox-remotestorage directly via http requests / xhr but there are also remotestorage client libraries out there to ease the interaction.
+
+* Javascript: https://github.com/remotestorage/remotestorage.js
 
 # Installing Ferox-Remotestorage
 
