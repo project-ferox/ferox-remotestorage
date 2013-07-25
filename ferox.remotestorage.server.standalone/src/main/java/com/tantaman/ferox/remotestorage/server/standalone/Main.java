@@ -22,7 +22,7 @@ public class Main {
 		try {
 			port = Integer.parseInt(System.getProperty("remotestorage.server.port"));
 		} catch (NumberFormatException e) {
-			port = 443;
+			port = 8443;
 		}
 		log.debug("RemoteStorage listening on " + port);
 		this.server = server;
