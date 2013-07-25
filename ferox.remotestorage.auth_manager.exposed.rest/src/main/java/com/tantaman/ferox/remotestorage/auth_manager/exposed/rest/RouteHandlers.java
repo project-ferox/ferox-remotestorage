@@ -23,7 +23,7 @@ public class RouteHandlers {
 				IRequestChainer next) {
 			List<String> scopes = content.getQueryParams("scopes");
 			String user = content.getQueryParam("username");
-			String password = content.getQueryParam("token");
+			String token = content.getQueryParam("token");
 			
 			
 		}
