@@ -6,7 +6,7 @@
 	url = https://github.com/project-ferox/remotestorage-felix-runtime.git
 [submodule "dependencies/stringtemplate4"]
 	path = dependencies/stringtemplate4
-	url = https://github.com/project-ferox/stringtemplate4.git
+	url = git@github.com:project-ferox/stringtemplate4.git
 [submodule "dependencies/MapDB"]
 	path = dependencies/MapDB
 	url = https://github.com/project-ferox/MapDB.git
