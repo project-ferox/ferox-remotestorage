@@ -21,6 +21,7 @@ import com.tantaman.lo4j.NamedThreadFactory;
  *
  */
 public class AuthorizationManager implements IAuthManager {
+	private static final String testEnv = System.getProperty("ferox.remotestorage.test");
 	private static final Logger log = LoggerFactory.getLogger(AuthorizationManager.class);
 	private static final ExecutorService AUTH_LOOKUP = Executors.newFixedThreadPool(1, new NamedThreadFactory("AuthorizationManager"));
 	private volatile IAuthRepo scopeRepository; // TODO: may need to be AtomicReference?  Could it be getting set and unset at the same time and require a CAS? does it matter?
@@ -45,6 +46,11 @@ public class AuthorizationManager implements IAuthManager {
 	
 	public void setScopeRepository(IAuthRepo scopeRepository) {
 		log.debug("Scope repository set " + this);
+		
+		if (testEnv != null) {
+			scopeRepository.addScopes("testtoken", "test", (Set)Lo.createSet("root:rw"));
+		}
+		
 		this.scopeRepository = scopeRepository;
 	}
 	
