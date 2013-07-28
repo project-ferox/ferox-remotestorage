@@ -1,12 +1,16 @@
 package com.tantaman.ferox.remotestorage.resource_provider.fs.resources;
 
+import io.netty.handler.codec.http.HttpHeaders;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Map;
 
 import com.tantaman.ferox.remotestorage.resource.IDocumentResource;
+import com.tantaman.ferox.remotestorage.resource_provider.fs.MetadataUtils;
 import com.tantaman.ferox.remotestorage.resource_provider.fs.Workers;
 
 public class Document implements IDocumentResource {
@@ -14,14 +18,17 @@ public class Document implements IDocumentResource {
 	private final File file;
 	private final long lastModified;
 	private final long fileLength;
+	private final Map<String, String> metadata;
 	
-	public Document(File file) throws FileNotFoundException {
+	public Document(File file, String mdPath) throws FileNotFoundException {
 		this.file = file;
 		// Cache all the parameters because methods on this object
 		// should all be non blocking.
 		stream = new FileInputStream(file);
 		lastModified = file.lastModified();
 		fileLength = file.length();
+		
+		metadata = MetadataUtils.getMetadata(mdPath);
 	}
 	
 	@Override
@@ -56,10 +63,8 @@ public class Document implements IDocumentResource {
 
 	@Override
 	public String getContentType() {
-		// TODO: fill this in correctly.
-		// this would involve looking up the corresponding md entry...
-//		return "text/plain";
-		return "application/json";
+		String type = metadata.get(HttpHeaders.Names.CONTENT_TYPE);
+		return type == null ? "application/json" : type;
 	}
 
 	@Override

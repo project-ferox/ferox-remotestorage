@@ -11,10 +11,10 @@ import org.slf4j.LoggerFactory;
 
 import com.tantaman.ferox.remotestorage.resource.IResource;
 import com.tantaman.ferox.remotestorage.resource.IResourceIdentifier;
-import com.tantaman.ferox.remotestorage.resource.IResourceOutputQueue;
+import com.tantaman.ferox.remotestorage.resource.IWritableDocument;
 import com.tantaman.ferox.remotestorage.resource_provider.fs.resources.Directory;
 import com.tantaman.ferox.remotestorage.resource_provider.fs.resources.Document;
-import com.tantaman.ferox.remotestorage.resource_provider.fs.resources.FileWriteQueue;
+import com.tantaman.ferox.remotestorage.resource_provider.fs.resources.WritableDocument;
 import com.tantaman.lo4j.Lo;
 import com.tantaman.lo4j.Lo.VFn2;
 
@@ -43,6 +43,10 @@ public class FsResourceProviderInternal {
 
 		Object version = Document.getVersion(f);
 		boolean deleted = f.delete();
+		File mdFile = new File(Utils.constructMetadataPath(fsRoot, identifier));
+		mdFile.delete();
+		
+		// TODO: delete containing directorie(s) if empty.
 
 		if (deleted) {
 			callback.f(version, null);
@@ -75,7 +79,7 @@ public class FsResourceProviderInternal {
 	}
 
 	void retrieveForWrite(IResourceIdentifier identifier,
-			VFn2<IResourceOutputQueue, Throwable> callback) {
+			VFn2<IWritableDocument, Throwable> callback) {
 		String uri = identifier.getUserRelativerUri();
 
 		String prefix = fsRoot + "/" + identifier.getUser();
@@ -89,14 +93,18 @@ public class FsResourceProviderInternal {
 
 			if (!ensureDirectoriesOrFail(f, callback))
 				return;
+			
+			File mdFile = new File(Utils.constructMetadataPath(fsRoot, identifier));
+			if (!ensureDirectoriesOrFail(mdFile, callback))
+				return;
 
-			callback.f(new FileWriteQueue(f, Workers.FS_POOL), null);
+			callback.f(new WritableDocument(f, Utils.constructMetadataPath(fsRoot, identifier), Workers.FS_POOL), null);
 		} catch (IOException e) {
 			callback.f(null, e);
 		}
 	}
 	
-	private boolean ensureDirectoriesOrFail(File f, VFn2<IResourceOutputQueue, Throwable> callback) {
+	private boolean ensureDirectoriesOrFail(File f, VFn2<IWritableDocument, Throwable> callback) {
 		if (!f.exists()) {
 			File parent = new File(f.getParent());
 			if (!parent.exists()) {
@@ -130,7 +138,7 @@ public class FsResourceProviderInternal {
 		if (identifier.isDir()) {
 			retrieveDirectoryResource(path, prefix, callback);
 		} else {
-			retrieveFileResource(path, prefix, callback);
+			retrieveFileResource(path, prefix, Utils.constructMetadataPath(fsRoot, identifier), callback);
 		}
 	}
 	
@@ -147,11 +155,11 @@ public class FsResourceProviderInternal {
 		}
 	}
 	
-	private void retrieveFileResource(String path, String prefix, VFn2<IResource, Throwable> callback) {
+	private void retrieveFileResource(String path, String prefix, String mdPath, VFn2<IResource, Throwable> callback) {
 		File f = new File(path);
 		if (f.exists() && f.getAbsolutePath().startsWith(prefix)) {
 			try {
-				Document doc = new Document(f);
+				Document doc = new Document(f, mdPath);
 				callback.f(doc, null);
 			} catch (FileNotFoundException e) {
 				callback.f(null, e);

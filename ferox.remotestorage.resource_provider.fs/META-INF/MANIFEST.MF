@@ -9,5 +9,6 @@ Import-Package: com.tantaman.ferox.remotestorage,
  com.tantaman.ferox.util,
  com.tantaman.ferox.webfinger,
  com.tantaman.lo4j,
+ io.netty.handler.codec.http;version="4.0.2.Final",
  org.slf4j;provider=paxlogging
 Service-Component: OSGI-INF/*

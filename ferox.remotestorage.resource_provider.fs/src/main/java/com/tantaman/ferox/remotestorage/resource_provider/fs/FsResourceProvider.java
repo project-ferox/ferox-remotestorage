@@ -8,12 +8,11 @@ import org.slf4j.LoggerFactory;
 import com.tantaman.ferox.remotestorage.ConfigKeys;
 import com.tantaman.ferox.remotestorage.resource.IResource;
 import com.tantaman.ferox.remotestorage.resource.IResourceIdentifier;
-import com.tantaman.ferox.remotestorage.resource.IResourceOutputQueue;
+import com.tantaman.ferox.remotestorage.resource.IWritableDocument;
 import com.tantaman.ferox.remotestorage.resource.IResourceProvider;
 import com.tantaman.lo4j.Lo;
 import com.tantaman.lo4j.Lo.VFn2;
 
-// TODO: clean this class up
 public class FsResourceProvider implements IResourceProvider {
 	private static final Logger log = LoggerFactory
 			.getLogger(FsResourceProvider.class);
@@ -45,7 +44,7 @@ public class FsResourceProvider implements IResourceProvider {
 
 	@Override
 	public void openForWrite(final IResourceIdentifier path,
-			final VFn2<IResourceOutputQueue, Throwable> callback)
+			final VFn2<IWritableDocument, Throwable> callback)
 			throws IllegalStateException {
 		if (path.isDir())
 			throw new IllegalStateException("Can't write to a directory");

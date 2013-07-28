@@ -1,10 +1,12 @@
 package com.tantaman.ferox.remotestorage.route_handlers;
 
+import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpResponseStatus;
 
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,8 +18,8 @@ import com.tantaman.ferox.api.request_response.IRequestChainer;
 import com.tantaman.ferox.api.request_response.IResponse;
 import com.tantaman.ferox.api.router.RouteHandlerAdapter;
 import com.tantaman.ferox.remotestorage.resource.IResourceIdentifier;
-import com.tantaman.ferox.remotestorage.resource.IResourceOutputQueue;
 import com.tantaman.ferox.remotestorage.resource.IResourceProvider;
+import com.tantaman.ferox.remotestorage.resource.IWritableDocument;
 import com.tantaman.lo4j.Lo;
 
 public class UpsertRouteHandler extends RouteHandlerAdapter {
@@ -25,7 +27,7 @@ public class UpsertRouteHandler extends RouteHandlerAdapter {
 
 	private static final Logger log = LoggerFactory.getLogger(UpsertRouteHandler.class);
 	private final List<IHttpReception> receptionQueue = new LinkedList<>();
-	private IResourceOutputQueue resource;
+	private IWritableDocument resource;
 
 	public UpsertRouteHandler(IResourceProvider resourceProvider) {
 		this.resourceProvider = resourceProvider;
@@ -42,9 +44,9 @@ public class UpsertRouteHandler extends RouteHandlerAdapter {
 		//		}
 
 		try {
-			resourceProvider.openForWrite(identifier, new Lo.VFn2<IResourceOutputQueue, Throwable>() {
+			resourceProvider.openForWrite(identifier, new Lo.VFn2<IWritableDocument, Throwable>() {
 				@Override
-				public void f(IResourceOutputQueue p1, Throwable p2) {
+				public void f(IWritableDocument p1, Throwable p2) {
 					openCallback(p1, p2, response);
 				}
 			});
@@ -56,7 +58,7 @@ public class UpsertRouteHandler extends RouteHandlerAdapter {
 		next.request(request);
 	}
 
-	private void openCallback(final IResourceOutputQueue p1, final Throwable p2, final IResponse response) {
+	private void openCallback(final IWritableDocument p1, final Throwable p2, final IResponse response) {
 		response.executor().execute(new Runnable() {
 			@Override
 			public void run() {
@@ -125,6 +127,8 @@ public class UpsertRouteHandler extends RouteHandlerAdapter {
 			resource.add(content.getContent().nioBuffer());
 			if (content.isLast()) {
 				try {
+					String type = content.getHeaders().get(HttpHeaders.Names.CONTENT_TYPE);
+					resource.updateMetadata((Map)Lo.createMap(HttpHeaders.Names.CONTENT_TYPE, type));
 					resource.close();
 					// TODO: various headers and what not
 					response.send(Lo.asJsonObject("status", "ok"), "application/json", HttpResponseStatus.OK);
