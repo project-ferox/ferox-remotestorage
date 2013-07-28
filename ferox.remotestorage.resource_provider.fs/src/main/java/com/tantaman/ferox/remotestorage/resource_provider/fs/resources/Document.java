@@ -1,4 +1,4 @@
-package com.tantaman.ferox.remotestorage.resource_provider.fs;
+package com.tantaman.ferox.remotestorage.resource_provider.fs.resources;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import com.tantaman.ferox.remotestorage.resource.IDocumentResource;
+import com.tantaman.ferox.remotestorage.resource_provider.fs.Workers;
 
 public class Document implements IDocumentResource {
 	private final InputStream stream;
