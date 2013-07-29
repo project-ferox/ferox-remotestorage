@@ -3,7 +3,6 @@ package com.tantaman.ferox.remotestorage.route_handlers;
 import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpResponseStatus;
 
-import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +26,8 @@ public class UpsertRouteHandler extends RouteHandlerAdapter {
 
 	private static final Logger log = LoggerFactory.getLogger(UpsertRouteHandler.class);
 	private final List<IHttpReception> receptionQueue = new LinkedList<>();
-	private IWritableDocument resource;
+
+	private DocumentWriter writer;
 
 	public UpsertRouteHandler(IResourceProvider resourceProvider) {
 		this.resourceProvider = resourceProvider;
@@ -38,10 +38,8 @@ public class UpsertRouteHandler extends RouteHandlerAdapter {
 			final IRequestChainer next) {
 		IResourceIdentifier identifier = response.getUserData();
 
-		//		synchronized (receptionQueue) {
 		receptionQueue.clear();
 		receptionQueue.add(request);
-		//		}
 
 		try {
 			resourceProvider.openForWrite(identifier, new Lo.VFn2<IWritableDocument, Throwable>() {
@@ -63,7 +61,7 @@ public class UpsertRouteHandler extends RouteHandlerAdapter {
 			@Override
 			public void run() {
 				if (p1 != null) {
-					resource = p1;
+					writer = new DocumentWriter(p1);
 					processReceptionQueue(response);
 				} else {
 					log.error("Couldn't get resource", p2);
@@ -78,10 +76,8 @@ public class UpsertRouteHandler extends RouteHandlerAdapter {
 	private void processReceptionQueue(IResponse response) {
 		log.debug("Processing reception queue");
 		List<IHttpReception> drainedQueue;
-//		synchronized (receptionQueue) {
-			drainedQueue = new LinkedList<>(receptionQueue);
-			receptionQueue.clear();
-//		}
+		drainedQueue = new LinkedList<>(receptionQueue);
+		receptionQueue.clear();
 
 		for (IHttpReception reception : drainedQueue) {
 			if (reception instanceof IHttpContent) {
@@ -108,36 +104,31 @@ public class UpsertRouteHandler extends RouteHandlerAdapter {
 
 	private void preprocess(IHttpContent content, IRequestChainer next, IResponse response) {
 		boolean canProceed = false;
-//		synchronized (receptionQueue) {
-			if (receptionQueue.isEmpty())
-				canProceed = true;
-			else {
-				content.getContent().retain();
-				receptionQueue.add(content);
-			}
-//		}
+		content.getContent().retain();
+
+		if (receptionQueue.isEmpty())
+			canProceed = true;
+		else {
+			receptionQueue.add(content);
+		}
 
 		if (canProceed) {
 			processContent(content, response);
 		}
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void processContent(IHttpContent content, IResponse response) {
-		try {
-			resource.add(content.getContent().nioBuffer());
-			if (content.isLast()) {
-				try {
-					String type = content.getHeaders().get(HttpHeaders.Names.CONTENT_TYPE);
-					resource.updateMetadata((Map)Lo.createMap(HttpHeaders.Names.CONTENT_TYPE, type));
-					resource.close();
-					// TODO: various headers and what not
-					response.send(Lo.asJsonObject("status", "ok"), "application/json", HttpResponseStatus.OK);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		} finally {
-			content.getContent().release();
+		writer.write(content.getContent());
+		if (content.isLast()) {
+			String type = content.getHeaders().get(HttpHeaders.Names.CONTENT_TYPE);
+			writer.updateMetadata((Map)Lo.createMap(HttpHeaders.Names.CONTENT_TYPE, type));
+			writer.close();
+
+			// TODO: various headers and what not
+			// TODO: wait for the actual completion before responding?
+			// We may not actually be done writing at this point.
+			response.send(Lo.asJsonObject("status", "ok"), "application/json", HttpResponseStatus.OK);
 		}
 	}
 
@@ -145,10 +136,8 @@ public class UpsertRouteHandler extends RouteHandlerAdapter {
 	public void exceptionCaught(Throwable cause, IResponse response,
 			IRequestChainer next) {
 		List<IHttpReception> drainedQueue;
-//		synchronized (receptionQueue) {
-			drainedQueue = new LinkedList<>(receptionQueue);
-			receptionQueue.clear();
-//		}
+		drainedQueue = new LinkedList<>(receptionQueue);
+		receptionQueue.clear();
 
 		for (IHttpReception r : drainedQueue) {
 			if (r instanceof IHttpContent) {
@@ -158,16 +147,4 @@ public class UpsertRouteHandler extends RouteHandlerAdapter {
 
 		next.exceptionCaught(cause);
 	}
-
-	// just save each content chunk into the file as per the spec....
-	// we should probably check for a custom header that'll indicate if it is a file upload...
-	// and grab the file in that case.  It'll require doing the body parsing in that case.
-	// So we can make a special case body parser for remotestorage that'll only do body parsing when that header
-	// is present.
-
-	// X-Rs-Subtype: file(s)
-	// requests of this type will be "put" to a directory.
-	// documents will be created for each file contained in the request.
-
-	//content.getContent();
 }

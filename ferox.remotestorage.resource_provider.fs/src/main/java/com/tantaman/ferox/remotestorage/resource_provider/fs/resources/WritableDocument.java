@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousFileChannel;
+import java.nio.channels.CompletionHandler;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
@@ -39,9 +40,9 @@ public class WritableDocument implements IWritableDocument {
 	}
 	
 	@Override
-	public void add(ByteBuffer buffer) {
+	public <A> void add(ByteBuffer buffer, A attachment, CompletionHandler<Integer, A> handler) {
 		int addition = buffer.limit() - buffer.position();
-		fileChannel.write(buffer, cursor);
+		fileChannel.write(buffer, cursor, attachment, handler);
 		cursor += addition;
 	}
 
@@ -52,7 +53,7 @@ public class WritableDocument implements IWritableDocument {
 	}
 
 	@Override
-	public void updateMetadata(Map<String, String> newMetadata) {
-		MetadataUtils.updateMetadata(newMetadata, metadata, metadataChannel);
+	public <A> void updateMetadata(Map<String, String> newMetadata, A attachment, CompletionHandler<Integer, A> handler) {
+		MetadataUtils.updateMetadata(newMetadata, metadata, metadataChannel, attachment, handler);
 	}
 }

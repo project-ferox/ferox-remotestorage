@@ -3,6 +3,7 @@ package com.tantaman.ferox.remotestorage.resource_provider.fs;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousFileChannel;
+import java.nio.channels.CompletionHandler;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -21,9 +22,9 @@ public class MetadataUtils {
 		return getMetadata(path);
 	}
 
-	public static void updateMetadata(Map<String, String> newMetadata,
+	public static <A> void updateMetadata(Map<String, String> newMetadata,
 			Map<String, String> previousMetadata,
-			AsynchronousFileChannel channel) {
+			AsynchronousFileChannel channel, A attach, CompletionHandler<Integer, A> handler) {
 		
 		for (Map.Entry<String, String> mdEntry : newMetadata.entrySet()) {
 			previousMetadata.put(mdEntry.getKey(), mdEntry.getValue());
@@ -36,7 +37,7 @@ public class MetadataUtils {
 		
 		byte [] bytes = result.toString().getBytes(StandardCharsets.UTF_8);
 		
-		channel.write(ByteBuffer.wrap(bytes), 0);
+		channel.write(ByteBuffer.wrap(bytes), 0, attach, handler);
 	}
 
 	public static Map<String, String> getMetadata(String path) {
