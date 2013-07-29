@@ -15,7 +15,7 @@
 	url = https://github.com/project-ferox/antlr3-runtime.git
 [submodule "dependencies/ferox"]
 	path = dependencies/ferox
-	url = https://github.com/project-ferox/ferox.git
+	url = git@github.com:project-ferox/ferox.git
 [submodule "dependencies/ferox-webfinger"]
 	path = dependencies/ferox-webfinger
 	url = https://github.com/project-ferox/ferox-webfinger.git
