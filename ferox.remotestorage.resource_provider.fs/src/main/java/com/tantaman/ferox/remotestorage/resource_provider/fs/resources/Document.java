@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.channels.ReadableByteChannel;
 import java.util.Map;
 
 import com.tantaman.ferox.remotestorage.resource.IDocumentResource;
@@ -14,7 +15,7 @@ import com.tantaman.ferox.remotestorage.resource_provider.fs.MetadataUtils;
 import com.tantaman.ferox.remotestorage.resource_provider.fs.Workers;
 
 public class Document implements IDocumentResource {
-	private final InputStream stream;
+	private final ReadableByteChannel channel;
 	private final File file;
 	private final long lastModified;
 	private final long fileLength;
@@ -24,25 +25,29 @@ public class Document implements IDocumentResource {
 		this.file = file;
 		// Cache all the parameters because methods on this object
 		// should all be non blocking.
-		stream = new FileInputStream(file);
 		lastModified = file.lastModified();
 		fileLength = file.length();
+		
+		if (fileLength > 0)
+			channel = new FileInputStream(file).getChannel(); // the stream is closed by the channel.
+		else
+			channel = null;
 		
 		metadata = MetadataUtils.getMetadata(mdPath);
 	}
 	
 	@Override
-	public InputStream getStream() throws FileNotFoundException {
-		return stream;
+	public ReadableByteChannel getStream() throws FileNotFoundException {
+		return channel;
 	}
 	
 	public void close() {
 		Workers.FS_POOL.execute(new Runnable() {
 			@Override
 			public void run() {
-				if (stream != null) {
+				if (channel != null) {
 					try {
-						stream.close();
+						channel.close();
 					} catch (IOException e) {
 						e.printStackTrace();
 					}

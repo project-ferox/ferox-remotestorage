@@ -4,6 +4,7 @@ import io.netty.channel.ChannelFutureListener;
 import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.LastHttpContent;
+import io.netty.handler.stream.ChunkedNioStream;
 import io.netty.handler.stream.ChunkedStream;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
@@ -127,7 +128,9 @@ public class ReadRouteHandler extends RouteHandlerAdapter {
         setDateAndCacheHeaders(response, doc);
 
         response.fineGrained().addResponseHeaders();
-        response.fineGrained().add(new ChunkedStream(doc.getStream(), 8192));
+        if (fileLength > 0)
+        	response.fineGrained().add(new ChunkedNioStream(doc.getStream(), 8192));
+//        response.fineGrained().add(new ChunkedStream(doc.getStream(), 8192));
         response.fineGrained().add(LastHttpContent.EMPTY_LAST_CONTENT);
 
         response.fineGrained().write().addListener(new GenericFutureListener<Future<? super Void>>() {
