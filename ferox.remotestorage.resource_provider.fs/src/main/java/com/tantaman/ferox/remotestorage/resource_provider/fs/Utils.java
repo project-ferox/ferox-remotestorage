@@ -15,6 +15,11 @@ public class Utils {
 	}
 	
 	public static String constructMetadataPath(String fsRoot, IResourceIdentifier identifier) {
-		return fsRoot + "/" + identifier.getUser() + "/.metadata/" + identifier.getUserRelativerUri();
+		return fsRoot + "/.metadata/" + identifier.getUser() + "/" + identifier.getUserRelativerUri();
+	}
+	
+	public static String getMetadataPathForFile(File f, String fsRoot) {
+		String p = f.getAbsolutePath();
+		return p.replace(fsRoot, fsRoot + "/.metadata");
 	}
 }

@@ -6,12 +6,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.channels.ReadableByteChannel;
 import java.util.Map;
 
 import com.tantaman.ferox.remotestorage.resource.IDocumentResource;
 import com.tantaman.ferox.remotestorage.resource_provider.fs.MetadataUtils;
+import com.tantaman.ferox.remotestorage.resource_provider.fs.Utils;
 import com.tantaman.ferox.remotestorage.resource_provider.fs.Workers;
 
 public class Document implements IDocumentResource {
@@ -74,13 +74,9 @@ public class Document implements IDocumentResource {
 
 	@Override
 	public Object getVersion() {
-		return getVersion(file);
-	}
-	
-	public static Object getVersion(File f) {
-		// TODO: this version calculation depends on the version of the remotestorage protocol
-		// we are using (unfortunately)...
-		return f.lastModified(); //Long.toString(f.lastModified());
+//		return getVersion(file);
+		String version = metadata.get(HttpHeaders.Names.ETAG);
+		return version == null ? "" : version;
 	}
 
 	@Override

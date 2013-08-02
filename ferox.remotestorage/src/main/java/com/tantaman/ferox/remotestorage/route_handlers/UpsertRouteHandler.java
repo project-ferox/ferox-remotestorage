@@ -3,6 +3,8 @@ package com.tantaman.ferox.remotestorage.route_handlers;
 import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpResponseStatus;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +21,7 @@ import com.tantaman.ferox.api.router.RouteHandlerAdapter;
 import com.tantaman.ferox.remotestorage.resource.IResourceIdentifier;
 import com.tantaman.ferox.remotestorage.resource.IResourceProvider;
 import com.tantaman.ferox.remotestorage.resource.IWritableDocument;
+import com.tantaman.ferox.util.Hex;
 import com.tantaman.lo4j.Lo;
 
 public class UpsertRouteHandler extends RouteHandlerAdapter {
@@ -28,6 +31,7 @@ public class UpsertRouteHandler extends RouteHandlerAdapter {
 	private final List<IHttpReception> receptionQueue = new LinkedList<>();
 
 	private DocumentWriter writer;
+	private MessageDigest currentDigest;
 
 	public UpsertRouteHandler(IResourceProvider resourceProvider) {
 		this.resourceProvider = resourceProvider;
@@ -37,7 +41,12 @@ public class UpsertRouteHandler extends RouteHandlerAdapter {
 	public void request(final IHttpRequest request, final IResponse response,
 			final IRequestChainer next) {
 		IResourceIdentifier identifier = response.getUserData();
-
+		try {
+			currentDigest = MessageDigest.getInstance("MD5");
+		} catch (NoSuchAlgorithmException e1) {
+			log.error("No MD5 algorithm.  Cannot compute document revisions.");
+		}
+		
 		receptionQueue.clear();
 		receptionQueue.add(request);
 
@@ -119,15 +128,21 @@ public class UpsertRouteHandler extends RouteHandlerAdapter {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void processContent(IHttpContent content, IResponse response) {
+		if (currentDigest != null)
+			currentDigest.update(content.getContent().array());
 		writer.write(content.getContent());
 		if (content.isLast()) {
 			String type = content.getHeaders().get(HttpHeaders.Names.CONTENT_TYPE);
-			writer.updateMetadata((Map)Lo.createMap(HttpHeaders.Names.CONTENT_TYPE, type));
+			String digest = "";
+			if (currentDigest != null)
+				digest = Hex.getHex(currentDigest.digest());
+			writer.updateMetadata((Map)Lo.createMap(HttpHeaders.Names.CONTENT_TYPE, type, HttpHeaders.Names.ETAG, digest));
 			writer.close();
 
 			// TODO: various headers and what not
 			// TODO: wait for the actual completion before responding?
 			// We may not actually be done writing at this point.
+			response.headers().set(HttpHeaders.Names.ETAG, digest);
 			response.send(Lo.asJsonObject("status", "ok"), "application/json", HttpResponseStatus.OK);
 		}
 	}

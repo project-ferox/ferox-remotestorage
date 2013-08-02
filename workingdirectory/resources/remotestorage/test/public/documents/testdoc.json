@@ -1,7 +1,1 @@
-{
-	"one": 2,
-	"three": 4,
-	"five": {
-		"six": 7
-	}
-}
+{"one":2,"three":4,"five":{"six":7}}

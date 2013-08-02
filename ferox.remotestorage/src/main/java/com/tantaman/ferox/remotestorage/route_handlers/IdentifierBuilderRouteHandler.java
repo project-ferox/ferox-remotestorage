@@ -25,6 +25,7 @@ public class IdentifierBuilderRouteHandler extends RouteHandlerAdapter {
 			IRequestChainer next) {
 		try {
 			response.headers().set(HttpHeaders.Names.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
+			response.headers().set(HttpHeaders.Names.ACCESS_CONTROL_EXPOSE_HEADERS, "ETag");
 			
 			IResourceIdentifier identifier = new DefaultResourceIdentifier(
 				request.getUrlParam("user"),

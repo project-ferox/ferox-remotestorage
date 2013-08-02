@@ -1,5 +1,7 @@
 package com.tantaman.ferox.remotestorage.resource_provider.fs;
 
+import io.netty.handler.codec.http.HttpHeaders;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -41,9 +43,13 @@ public class FsResourceProviderInternal {
 		if (!checkWriteAccessOrFail(f, prefix, callback))
 			return;
 
-		Object version = Document.getVersion(f);
 		boolean deleted = f.delete();
-		File mdFile = new File(Utils.constructMetadataPath(fsRoot, identifier));
+		String mdPath = Utils.constructMetadataPath(fsRoot, identifier);
+		File mdFile = new File(mdPath);
+		Object version = MetadataUtils.getMetadata(mdPath).get(HttpHeaders.Names.ETAG);
+		if (version == null)
+			version = "";
+		
 		mdFile.delete();
 		
 		// TODO: delete containing directorie(s) if empty.
@@ -182,7 +188,11 @@ public class FsResourceProviderInternal {
 			String name = file.getName();
 			if (file.isDirectory())
 				name += "/";
-			documentListing.put(name, Document.getVersion(file));
+			String version = MetadataUtils.getMetadata(Utils.getMetadataPathForFile(f, fsRoot)).get(HttpHeaders.Names.ETAG);
+			if (version == null)
+				version = "";
+			
+			documentListing.put(name, version);
 		}
 
 		return documentListing;
