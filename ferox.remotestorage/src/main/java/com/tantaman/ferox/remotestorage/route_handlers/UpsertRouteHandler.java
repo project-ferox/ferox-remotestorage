@@ -22,6 +22,8 @@ import com.tantaman.ferox.remotestorage.StatusResponses;
 import com.tantaman.ferox.remotestorage.resource.IResourceIdentifier;
 import com.tantaman.ferox.remotestorage.resource.IResourceProvider;
 import com.tantaman.ferox.remotestorage.resource.IWritableDocument;
+import com.tantaman.ferox.remotestorage.route_handlers.rules.WriteRules;
+import com.tantaman.ferox.remotestorage.route_handlers.rules.WriteRules.AbstractMatch;
 import com.tantaman.ferox.util.Hex;
 import com.tantaman.lo4j.Lo;
 
@@ -33,6 +35,8 @@ public class UpsertRouteHandler extends RouteHandlerAdapter {
 
 	private DocumentWriter writer;
 	private MessageDigest currentDigest;
+	private boolean ignoreContent = false;
+	private static final WriteRules writeRules = new WriteRules();
 
 	public UpsertRouteHandler(IResourceProvider resourceProvider) {
 		this.resourceProvider = resourceProvider;
@@ -55,7 +59,7 @@ public class UpsertRouteHandler extends RouteHandlerAdapter {
 			resourceProvider.openForWrite(identifier, new Lo.VFn2<IWritableDocument, Throwable>() {
 				@Override
 				public void f(IWritableDocument p1, Throwable p2) {
-					openCallback(p1, p2, response);
+					openCallback(p1, p2, request, response);
 				}
 			});
 		} catch (IllegalStateException e) {
@@ -66,19 +70,45 @@ public class UpsertRouteHandler extends RouteHandlerAdapter {
 		next.request(request);
 	}
 
-	private void openCallback(final IWritableDocument p1, final Throwable p2, final IResponse response) {
+	private void openCallback(final IWritableDocument p1, final Throwable p2, final IHttpRequest request, final IResponse response) {
 		response.executor().execute(new Runnable() {
 			@Override
 			public void run() {
 				if (p1 != null) {
-					writer = new DocumentWriter(p1);
-					processReceptionQueue(response);
+					final AbstractMatch match = writeRules.match(request.getHeaders(), p1.getMetadata());
+					final AbstractMatch noneMatch = writeRules.noneMatch(request.getHeaders(), p1.getMetadata());
+					
+					if (match.allPass(noneMatch)) {
+						writer = new DocumentWriter(p1);
+						processReceptionQueue(response);
+					} else {
+						matchConstraintsViolated(match, noneMatch, response);
+					}
 				} else {
 					log.error("Couldn't get resource", p2);
 					response.send(StatusResponses.INTERNAL_ERROR, "application/json", HttpResponseStatus.INTERNAL_SERVER_ERROR);
 				}
 			}
 		});
+	}
+	
+	private void matchConstraintsViolated(AbstractMatch match, AbstractMatch noneMatch, IResponse response) {
+		ignoreContent = true;
+		
+		receptionQueue.clear();
+		
+		boolean matchFail = !match.passes();
+		boolean noneMatchFail = !match.passes();
+		
+		if (matchFail && noneMatchFail) {
+			response.send(StatusResponses.MATCH_NONEMATCH_FAILED, "application/json", HttpResponseStatus.PRECONDITION_FAILED);
+		} else if (matchFail) {
+			response.send(StatusResponses.MATCH_FAILED, "application/json", HttpResponseStatus.PRECONDITION_FAILED);
+		} else if (noneMatchFail) {
+			response.send(StatusResponses.NONEMATCH_FAILED, "application/json", HttpResponseStatus.PRECONDITION_FAILED);
+		} else {
+			log.error("This code should be impossible to reach. " + match + " " + noneMatch);
+		}
 	}
 
 	// TODO: abstract out the reception queue stuff
@@ -113,6 +143,8 @@ public class UpsertRouteHandler extends RouteHandlerAdapter {
 	}
 
 	private void preprocess(IHttpContent content, IRequestChainer next, IResponse response) {
+		if (ignoreContent) return;
+		
 		boolean canProceed = false;
 		content.getContent().retain();
 
@@ -131,6 +163,8 @@ public class UpsertRouteHandler extends RouteHandlerAdapter {
 	private void processContent(IHttpContent content, IResponse response) {
 		if (currentDigest != null)
 			currentDigest.update(content.getContent().array());
+		// The Write will release netty byte buffer once it is done with it.
+		// hence the lack of a release in this class.
 		writer.write(content.getContent());
 		if (content.isLast()) {
 			String type = content.getHeaders().get(HttpHeaders.Names.CONTENT_TYPE);
