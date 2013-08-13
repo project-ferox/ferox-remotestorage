@@ -9,4 +9,5 @@ public interface IWritableDocument {
 	public <A> void updateMetadata(Map<String, String> metadata, A attachment, CompletionHandler<Integer, A> handler);
 	public <A> void add(ByteBuffer buffer, A attachment, CompletionHandler<Integer, A> handler);
 	public void close() throws IOException;
+	public Map<String, String> getMetadata();
 }

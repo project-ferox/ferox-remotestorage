@@ -18,6 +18,7 @@ import com.tantaman.ferox.api.request_response.IHttpRequest;
 import com.tantaman.ferox.api.request_response.IRequestChainer;
 import com.tantaman.ferox.api.request_response.IResponse;
 import com.tantaman.ferox.api.router.RouteHandlerAdapter;
+import com.tantaman.ferox.remotestorage.StatusResponses;
 import com.tantaman.ferox.remotestorage.resource.IResourceIdentifier;
 import com.tantaman.ferox.remotestorage.resource.IResourceProvider;
 import com.tantaman.ferox.remotestorage.resource.IWritableDocument;
@@ -59,7 +60,7 @@ public class UpsertRouteHandler extends RouteHandlerAdapter {
 			});
 		} catch (IllegalStateException e) {
 			log.error("Bad state", e);
-			response.send(Lo.asJsonObject("status", "bad_request"), "application/json", HttpResponseStatus.BAD_REQUEST);
+			response.send(StatusResponses.BAD_REQUEST, "application/json", HttpResponseStatus.BAD_REQUEST);
 		}
 
 		next.request(request);
@@ -74,7 +75,7 @@ public class UpsertRouteHandler extends RouteHandlerAdapter {
 					processReceptionQueue(response);
 				} else {
 					log.error("Couldn't get resource", p2);
-					response.send(Lo.asJsonObject("status", "error"), "application/json", HttpResponseStatus.INTERNAL_SERVER_ERROR);
+					response.send(StatusResponses.INTERNAL_ERROR, "application/json", HttpResponseStatus.INTERNAL_SERVER_ERROR);
 				}
 			}
 		});
@@ -143,7 +144,7 @@ public class UpsertRouteHandler extends RouteHandlerAdapter {
 			// TODO: wait for the actual completion before responding?
 			// We may not actually be done writing at this point.
 			response.headers().set(HttpHeaders.Names.ETAG, digest);
-			response.send(Lo.asJsonObject("status", "ok"), "application/json", HttpResponseStatus.OK);
+			response.send(StatusResponses.SUCCESS, "application/json", HttpResponseStatus.OK);
 		}
 	}
 

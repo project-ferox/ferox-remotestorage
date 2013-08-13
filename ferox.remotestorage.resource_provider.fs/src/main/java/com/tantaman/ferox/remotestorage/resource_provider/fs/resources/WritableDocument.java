@@ -31,12 +31,12 @@ public class WritableDocument implements IWritableDocument {
 				p,
 				(Set)Lo.createSet(StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE),
 				executor);
+
+		metadata = MetadataUtils.getMetadata(metadataPath);
 		
 		metadataChannel = AsynchronousFileChannel.open(Paths.get(metadataPath),
 					(Set)Lo.createSet(StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE),
 					executor);
-		
-		metadata = MetadataUtils.getMetadata(metadataPath);
 	}
 	
 	@Override
@@ -55,5 +55,10 @@ public class WritableDocument implements IWritableDocument {
 	@Override
 	public <A> void updateMetadata(Map<String, String> newMetadata, A attachment, CompletionHandler<Integer, A> handler) {
 		MetadataUtils.updateMetadata(newMetadata, metadata, metadataChannel, attachment, handler);
+	}
+	
+	@Override
+	public Map<String, String> getMetadata() {
+		return metadata;
 	}
 }

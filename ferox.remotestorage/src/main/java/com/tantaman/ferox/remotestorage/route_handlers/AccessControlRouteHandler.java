@@ -16,6 +16,7 @@ import com.tantaman.ferox.api.request_response.IHttpRequest;
 import com.tantaman.ferox.api.request_response.IRequestChainer;
 import com.tantaman.ferox.api.request_response.IResponse;
 import com.tantaman.ferox.api.router.IRouteHandler;
+import com.tantaman.ferox.remotestorage.StatusResponses;
 import com.tantaman.ferox.remotestorage.auth_manager.IAuthManager;
 import com.tantaman.ferox.remotestorage.resource.IResourceIdentifier;
 import com.tantaman.ferox.util.IPair;
@@ -64,7 +65,7 @@ public class AccessControlRouteHandler implements IRouteHandler {
 					processReceptionQueue();
 				} else {
 					log.debug("Authorization failed");
-					response.send("{\"status\": \"unauthorized\"}", "application/json", HttpResponseStatus.UNAUTHORIZED)
+					response.send(StatusResponses.NOT_AUTHORIZED, "application/json", HttpResponseStatus.UNAUTHORIZED)
 					.addListener(ChannelFutureListener.CLOSE);
 					request.dispose();
 					receptionQueue.clear();
