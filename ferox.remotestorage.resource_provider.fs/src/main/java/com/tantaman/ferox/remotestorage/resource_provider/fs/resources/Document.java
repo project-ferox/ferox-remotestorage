@@ -11,7 +11,6 @@ import java.util.Map;
 
 import com.tantaman.ferox.remotestorage.resource.IDocumentResource;
 import com.tantaman.ferox.remotestorage.resource_provider.fs.MetadataUtils;
-import com.tantaman.ferox.remotestorage.resource_provider.fs.Utils;
 import com.tantaman.ferox.remotestorage.resource_provider.fs.Workers;
 
 public class Document implements IDocumentResource {
