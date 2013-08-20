@@ -10,6 +10,7 @@ import com.tantaman.ferox.api.request_response.IHttpContent;
 import com.tantaman.ferox.api.request_response.IRequestChainer;
 import com.tantaman.ferox.api.request_response.IResponse;
 import com.tantaman.ferox.api.router.RouteHandlerAdapter;
+import com.tantaman.ferox.remotestorage.StatusResponses;
 import com.tantaman.ferox.remotestorage.resource.IResourceIdentifier;
 import com.tantaman.ferox.remotestorage.resource.IResourceProvider;
 import com.tantaman.lo4j.Lo;
@@ -37,7 +38,7 @@ public class DeleteRouteHandler extends RouteHandlerAdapter {
 	private void deleteCallback(Object version, Throwable error, IResponse response) {
 		if (error != null || version == null) {
 			// TODO: better error reporting.
-			response.send(Lo.asJsonObject("status", "not_found"), "application/json", HttpResponseStatus.NOT_FOUND);
+			response.send(StatusResponses.NOT_FOUND, "application/json", HttpResponseStatus.NOT_FOUND);
 		} else {
 			response.headers().add(HttpHeaders.Names.ETAG, version);
 			response.send(Lo.asJsonObject("status", version), "application/json");

@@ -10,6 +10,7 @@ import com.tantaman.ferox.api.request_response.IHttpRequest;
 import com.tantaman.ferox.api.request_response.IRequestChainer;
 import com.tantaman.ferox.api.request_response.IResponse;
 import com.tantaman.ferox.api.router.RouteHandlerAdapter;
+import com.tantaman.ferox.remotestorage.StatusResponses;
 import com.tantaman.ferox.remotestorage.resource.DefaultResourceIdentifier;
 import com.tantaman.ferox.remotestorage.resource.IResourceIdentifier;
 
@@ -33,7 +34,7 @@ public class IdentifierBuilderRouteHandler extends RouteHandlerAdapter {
 			response.setUserData(identifier);
 			next.request(request);
 		} catch (Exception e) {
-			response.send("{\"status\": \"not_found\"}", "application/json", HttpResponseStatus.NOT_FOUND)
+			response.send(StatusResponses.NOT_FOUND, "application/json", HttpResponseStatus.NOT_FOUND)
 				.addListener(ChannelFutureListener.CLOSE);
 			request.dispose();
 		}

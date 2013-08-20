@@ -24,6 +24,7 @@ import com.tantaman.ferox.api.request_response.IHttpContent;
 import com.tantaman.ferox.api.request_response.IRequestChainer;
 import com.tantaman.ferox.api.request_response.IResponse;
 import com.tantaman.ferox.api.router.RouteHandlerAdapter;
+import com.tantaman.ferox.remotestorage.StatusResponses;
 import com.tantaman.ferox.remotestorage.resource.IDirectoryResource;
 import com.tantaman.ferox.remotestorage.resource.IDocumentResource;
 import com.tantaman.ferox.remotestorage.resource.IResource;
@@ -67,7 +68,7 @@ public class ReadRouteHandler extends RouteHandlerAdapter {
 				try {
 					if (p2 != null) {
 						if (p2 instanceof FileNotFoundException) {
-							response.send(Lo.asJsonObject("status", "not_found"), "application/json", HttpResponseStatus.NOT_FOUND);
+							response.send(StatusResponses.NOT_FOUND, "application/json", HttpResponseStatus.NOT_FOUND);
 						} else {
 							log.error("Error getting resource", p2);
 							response.send(p2.getMessage(), HttpResponseStatus.INTERNAL_SERVER_ERROR);
@@ -89,10 +90,10 @@ public class ReadRouteHandler extends RouteHandlerAdapter {
 				returnDocument(doc, response, request);
 			} catch (ParseException e) {
 				log.warn("Couldn't parse request");
-				response.send(Lo.asJsonObject(new Object [] {"status", "bad_request"}), "application/json", HttpResponseStatus.BAD_REQUEST);
+				response.send(StatusResponses.BAD_REQUEST, "application/json", HttpResponseStatus.BAD_REQUEST);
 			} catch (FileNotFoundException e) {
 				log.warn("File not found");
-				response.send(Lo.asJsonObject(new Object [] {"status", "not_found"}), "application/json", HttpResponseStatus.NOT_FOUND);
+				response.send(StatusResponses.NOT_FOUND, "application/json", HttpResponseStatus.NOT_FOUND);
 			}
 		} else if (p1 instanceof IDirectoryResource) {
 			IDirectoryResource dir = (IDirectoryResource)p1;
